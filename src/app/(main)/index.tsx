@@ -5,6 +5,7 @@ const Main = () => {
   return (
     <View>
       <Text>Welcome to DineSPace</Text>
+      <Text>Login SuccessFull...............................</Text>
     </View>
   )
 }

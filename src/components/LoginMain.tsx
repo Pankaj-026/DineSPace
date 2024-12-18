@@ -1,9 +1,47 @@
 import { View, Text, StyleSheet, TextInput, Button, TouchableOpacity } from 'react-native'
-import React from 'react'
-import { AntDesign } from '@expo/vector-icons'
+import React, { useState } from 'react'
 import { Link } from 'expo-router'
+import { useRouter } from 'expo-router'
+import { signInWithEmailAndPassword } from 'firebase/auth'
+import { auth } from '@/firebase.config'
 
 export default function LoginMain() {
+
+
+    const router = useRouter();
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [ErrorMessage, setErrorMessage] = useState("");
+
+
+    const handleInputChange = (setter: any) => (value: any) => {
+        setter(value)
+        if (ErrorMessage) {
+            setErrorMessage("")
+        }
+    }
+
+
+    const handleLogin = () => {
+        setErrorMessage(""); // Clear previous errors
+        signInWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+                const user = userCredential.user;
+
+                if (user.emailVerified) {
+                    router.push("/(main)");
+                } else {
+                    setErrorMessage('Please verify your email address');
+                }
+                setEmail('');
+                setPassword('');
+            })
+            .catch((error) => {
+                const ErrorMsg = error.message; // Correct property name
+                setErrorMessage(ErrorMsg);
+            });
+    };
+
 
     return (
 
@@ -11,16 +49,34 @@ export default function LoginMain() {
             <Text style={styles.login_title}>Let's Get You Started</Text>
 
             <Text style={styles.label}>Email Address</Text>
-            <TextInput style={styles.input} placeholder='Enter your email address' />
+            <TextInput style={styles.input}
+                placeholder='Enter your email address'
+                value={email}
+                onChangeText={handleInputChange(setEmail)}
+                keyboardType='email-address'
+            />
 
             <Text style={styles.label}>Password</Text>
-            <TextInput style={styles.input} placeholder='Enter your password' secureTextEntry />
+            <TextInput style={styles.input}
+                placeholder='Enter your password'
+                value={password}
+                onChangeText={handleInputChange(setPassword)}
+                secureTextEntry
+            />
 
-            <Link href={"/(main)"} style={styles.button_style}>
-            <TouchableOpacity >
+            {
+                ErrorMessage && (
+                    <Text style={{ color: 'red', marginBottom: 10, textAlign: 'center' }}>
+                        {ErrorMessage}
+                    </Text>
+                )
+            }
+
+
+
+            <TouchableOpacity style={styles.button_style} onPress={handleLogin} >
                 <Text style={styles.button_text}>LogIn</Text>
             </TouchableOpacity>
-            </Link>
 
             <Text style={styles.login_text}>
                 Don't have an account? <Link href={"/(auth)/signUp"} style={styles.red_colors}>SignUp</Link>
