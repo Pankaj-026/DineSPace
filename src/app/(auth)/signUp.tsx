@@ -6,7 +6,7 @@ import DineSPaceHeader from '@/src/components/DineSPace-header';
 import { useRouter } from 'expo-router';
 import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth'
 import { auth } from "@/firebase.config"
-
+import { setUserNames } from '@/src/app/(auth)/storeUserName';
 
 
 const SignUp = () => {
@@ -16,7 +16,7 @@ const SignUp = () => {
   const [password, setPassword] = useState("");
   const [ErrorMessage, setErrorMessage] = useState("");
   const [emailSent, setEmailSent] = useState(false)
-
+  // const [userNames, setUserNames] = useState("");
 
   const handleInputChange = (setter: any) => (value: any) => {
     setter(value)
@@ -33,6 +33,7 @@ const SignUp = () => {
         sendEmailVerification(user)
           .then(() => {
             alert('Email verification sent ! Please check your inbox')
+            router.push('/(auth)/login')
           })
           .catch((error) => setErrorMessage("Error sending verification email"))
         setEmail('')
@@ -56,7 +57,7 @@ const SignUp = () => {
         <Text style={styles.signup_title}>Let's Get You Started</Text>
 
         <Text style={styles.label}>Full Name</Text>
-        <TextInput style={styles.input} placeholder='Enter your full name' />
+        <TextInput style={styles.input} placeholder='Enter your full name' onChangeText={handleInputChange(setUserNames)}/>
 
         <Text style={styles.label}>Email Address</Text>
         <TextInput style={styles.input}

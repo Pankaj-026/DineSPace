@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { Redirect, Stack, Slot } from 'expo-router'
 import * as SplashScreen from 'expo-splash-screen'
-import { signInWithEmailAndPassword } from 'firebase/auth'
-import { auth } from '@/firebase.config'
+// import { signInWithEmailAndPassword } from 'firebase/auth'
+// import { auth } from '@/firebase.config'
 
 
 SplashScreen.preventAutoHideAsync();
@@ -10,29 +10,29 @@ SplashScreen.preventAutoHideAsync();
 const RootLayout = () => {
 
     const [isLogin, setIsLogin] = useState(false);
-    let email = "luffyyy.00001@gmail.com"
-    let password = "Pankaj026"
+    // let email = "luffyyy.00001@gmail.com"
+    // let password = "Pankaj026"
 
     useEffect(() => {
         SplashScreen.hideAsync();
     }, [])
 
-    const checkLogin = () => {
+    // const checkLogin = () => {
 
-        signInWithEmailAndPassword(auth, email, password)
-            .then((userCredential) => {
-                const user = userCredential.user;
+    //     signInWithEmailAndPassword(auth, email, password)
+    //         .then((userCredential) => {
+    //             const user = userCredential.user;
 
-                if (user.emailVerified) {
-                    setIsLogin(true)
+    //             if (user.emailVerified) {
+    //                 setIsLogin(true)
 
-                } else {
-                    setIsLogin(false)
-                }
-            })
-    }
+    //             } else {
+    //                 setIsLogin(false)
+    //             }
+    //         })
+    // }
 
-    { checkLogin() }
+    // { checkLogin() }
     return (
         <>
             <Stack screenOptions={{ headerShown: false }} />

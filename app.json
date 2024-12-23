@@ -16,15 +16,15 @@
       "adaptiveIcon": {
         "foregroundImage": "./src/assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.anonymous.spapp"
     },
     "web": {
       "bundler": "metro",
       "output": "static",
       "favicon": "./src/assets/images/favicon.png"
     },
-    "plugins":
-     [
+    "plugins": [
       "@react-native-google-signin/google-signin",
       "expo-router",
       [
