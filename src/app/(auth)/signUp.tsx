@@ -6,7 +6,6 @@ import DineSPaceHeader from '@/src/components/DineSPace-header';
 import { useRouter } from 'expo-router';
 import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth'
 import { auth } from "@/firebase.config"
-import { setUserNames } from '@/src/app/(auth)/storeUserName';
 
 
 const SignUp = () => {
@@ -56,8 +55,8 @@ const SignUp = () => {
       <View style={styles.body_container}>
         <Text style={styles.signup_title}>Let's Get You Started</Text>
 
-        <Text style={styles.label}>Full Name</Text>
-        <TextInput style={styles.input} placeholder='Enter your full name' onChangeText={handleInputChange(setUserNames)}/>
+        {/* <Text style={styles.label}>Full Name</Text>
+        <TextInput style={styles.input} placeholder='Enter your full name' onChangeText={handleInputChange(setUserNames)} /> */}
 
         <Text style={styles.label}>Email Address</Text>
         <TextInput style={styles.input}

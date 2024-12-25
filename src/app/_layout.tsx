@@ -3,13 +3,14 @@ import { Redirect, Stack, Slot } from 'expo-router'
 import * as SplashScreen from 'expo-splash-screen'
 // import { signInWithEmailAndPassword } from 'firebase/auth'
 // import { auth } from '@/firebase.config'
+import "@/global.css"
 
 
 SplashScreen.preventAutoHideAsync();
 
 const RootLayout = () => {
 
-    const [isLogin, setIsLogin] = useState(false);
+    const [isLogin, setIsLogin] = useState(true);
     // let email = "luffyyy.00001@gmail.com"
     // let password = "Pankaj026"
 
