@@ -4,9 +4,47 @@ import React, { useEffect, useRef } from 'react';
 import { Link } from 'expo-router';
 import { AntDesign } from '@expo/vector-icons';
 import imagePath from '@/src/constants/imagePath';
+// import auth from '@react-native-firebase/auth'
+// import { GoogleSignin } from '@react-native-google-signin/google-signin';
+
+// GoogleSignin.configure({
+//   webClientId: '861437992056-838qcfsi23lrfoatkich6tuh4uqd5na1.apps.googleusercontent.com',
+//   scopes: ["profile", "email"]
+// })
 
 const StartPage = () => {
   const fadeAnim = useRef(new Animated.Value(0)).current; // Animation for fade-in
+  // Google auth
+
+  // async function onGoogleButtonPress() {
+  //   try {
+  //     // Sign out any existing sessions
+  //     await GoogleSignin.signOut();
+
+  //     // Perform Google sign-in and get idToken
+  //     const { idToken }: any = await GoogleSignin.signIn();
+
+  //     if (!idToken) {
+  //       throw new Error("Google Sign-In failed: No idToken returned.");
+  //     }
+
+  //     // Create Firebase credential with idToken
+  //     const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+
+  //     // Sign in to Firebase
+  //     const userCredential = await auth().signInWithCredential(googleCredential);
+
+  //     console.log("Signed in with Google:", userCredential.user);
+  //     return userCredential;
+  //   } catch (error: any) {
+  //     console.error("Google sign-in error:", error);
+  //     alert(error.message || "An unknown error occurred.");
+  //   }
+  // }
+
+
+
+
 
   // Animate main content on mount
   useEffect(() => {
@@ -17,6 +55,9 @@ const StartPage = () => {
       useNativeDriver: true,
     }).start();
   }, [fadeAnim]);
+
+
+
 
   return (
     <SafeAreaView style={styles.container}>
@@ -34,11 +75,14 @@ const StartPage = () => {
             </Link>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.button}>
+          <TouchableOpacity style={styles.button}
+          // onPress={() =>
+          // onGoogleButtonPress().then((val) =>
+          //   console.log(val, "Signed in with Google!")
+          // ) }
+          >
             <AntDesign name="google" size={18} color="white" />
-            <Link href={"/(auth)/signUp"}>
-              <Text style={styles.button_text}>Sign up With Google</Text>
-            </Link>
+            <Text style={styles.button_text}>Sign up With Google</Text>
           </TouchableOpacity>
         </View>
 
@@ -69,7 +113,7 @@ const StartPage = () => {
       <Image source={imagePath.down_dine} style={styles.footer_image} />
     </SafeAreaView>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {

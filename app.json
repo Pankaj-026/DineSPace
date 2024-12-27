@@ -12,12 +12,12 @@
       "supportsTablet": true
     },
     "android": {
-      "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
         "foregroundImage": "./src/assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.anonymous.spapp"
+      "package": "com.Redeye.DineSPace",
+      "googleServicesFile": "./google-services.json"
     },
     "web": {
       "bundler": "metro",

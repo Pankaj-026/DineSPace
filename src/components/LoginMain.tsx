@@ -29,7 +29,7 @@ export default function LoginMain() {
                 const user = userCredential.user;
 
                 if (user.emailVerified) {
-                    router.push("/(main)");
+                    router.push("/(main)/(tabs)");
                 } else {
                     setErrorMessage('Please verify your email address');
                 }

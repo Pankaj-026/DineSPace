@@ -1,11 +1,12 @@
 import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Link } from 'expo-router';
 import DineSPaceHeader from '@/src/components/DineSPace-header';
 import { useRouter } from 'expo-router';
 import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth'
-import { auth } from "@/firebase.config"
+import { auth, db } from "@/firebase.config"
+import { doc, setDoc } from 'firebase/firestore';
 
 
 const SignUp = () => {
@@ -15,7 +16,7 @@ const SignUp = () => {
   const [password, setPassword] = useState("");
   const [ErrorMessage, setErrorMessage] = useState("");
   const [emailSent, setEmailSent] = useState(false)
-  // const [userNames, setUserNames] = useState("");
+  const [userName, setUserName] = useState("");
 
   const handleInputChange = (setter: any) => (value: any) => {
     setter(value)
@@ -27,20 +28,26 @@ const SignUp = () => {
   const handleSignup = () => {
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
-        const user = userCredential.user
-        // alert('Successfull')
+        const user = userCredential.user;
+
+        setDoc(doc(db, 'users', user.uid), {
+          name: userName,
+          email: user.email,
+        });
+
         sendEmailVerification(user)
           .then(() => {
-            alert('Email verification sent ! Please check your inbox')
+            alert(`A verification link has been sent to ${email}. Please verify your email.`);
             router.push('/(auth)/login')
           })
           .catch((error) => setErrorMessage("Error sending verification email"))
         setEmail('')
         setPassword('')
+        setUserName('');
 
       })
       .catch((error) => {
-        const ErrorMsg = error.Message;
+        const ErrorMsg = error.message;
         setErrorMessage(ErrorMsg)
       })
   }
@@ -55,8 +62,13 @@ const SignUp = () => {
       <View style={styles.body_container}>
         <Text style={styles.signup_title}>Let's Get You Started</Text>
 
-        {/* <Text style={styles.label}>Full Name</Text>
-        <TextInput style={styles.input} placeholder='Enter your full name' onChangeText={handleInputChange(setUserNames)} /> */}
+        <Text style={styles.label}>Full Name</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Enter your full name"
+          value={userName}
+          onChangeText={handleInputChange(setUserName)}
+        />
 
         <Text style={styles.label}>Email Address</Text>
         <TextInput style={styles.input}
@@ -90,7 +102,7 @@ const SignUp = () => {
         }
 
         <Text style={styles.login_text}>
-          Already a user? <Link href={"/(auth)/login"} style={styles.red_colors} >LogIn</Link>
+          Already an user? <Link href={"/(auth)/login"} style={styles.red_colors} >LogIn</Link>
         </Text>
       </View>
 
@@ -155,3 +167,4 @@ const styles = StyleSheet.create({
 });
 
 export default SignUp;
+
