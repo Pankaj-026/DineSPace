@@ -1,14 +1,42 @@
 import { View, Text, Image } from 'react-native'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import { doc, getDoc } from 'firebase/firestore';
+import { auth, db } from '@/firebase.config';
+import NoUserProfile from "@/src/constants/imagePath";
 
 const HomeHeader = () => {
+
+
+    const [userName, setUserName] = useState('');
+    
+      useEffect(() => {
+        const fetchUserData = async () => {
+          const user = auth.currentUser;
+          if (user) {
+            try {
+              const docRef = doc(db, 'users', user.uid);
+              const docSnap = await getDoc(docRef);
+              if (docSnap.exists()) {
+                setUserName(docSnap.data().name);
+              } else {
+                console.log("No such document!");
+              }
+            } catch (error) {
+              console.error("Error fetching user data:", error);
+            }
+          }
+        };
+      
+        fetchUserData();
+      }, []);
+
     return (
         <View className='flex-row justify-between items-center px-2'>
             <View className='w-1/2 flex-row h-17 pt-5'>
                 <View className='pr-2'>
                     <View className='overflow-hidden'>
                         <Image
-                            source={require("@/src/assets/images/icon.png")}
+                            source= {NoUserProfile.NoUserProfile}
                             style={{
                                 width: 50,
                                 height: 50,
@@ -23,7 +51,7 @@ const HomeHeader = () => {
                 <View>
                     <Text className='text-base text-neutral-100  font-medium size-22'>Welcome Back</Text>
                     
-                    <Text className='text-base size-18 whitespace-nowrap dark:text-white font-bold'>Pankaj Gupta</Text>
+                    <Text className='text-base size-18 whitespace-nowrap dark:text-white font-bold'>{userName}</Text>
                 </View>
             </View>
             

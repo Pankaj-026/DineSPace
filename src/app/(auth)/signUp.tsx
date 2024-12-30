@@ -1,4 +1,4 @@
-import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import React, { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Link } from 'expo-router';
@@ -33,6 +33,9 @@ const SignUp = () => {
         setDoc(doc(db, 'users', user.uid), {
           name: userName,
           email: user.email,
+        }).catch((error) => {
+          console.error("Error writing to Firestore:", error);
+          setErrorMessage("Failed to save user data. Please try again.");
         });
 
         sendEmailVerification(user)
@@ -55,59 +58,67 @@ const SignUp = () => {
   return (
     <SafeAreaView style={styles.container}>
 
-      {/* Header */}
-      <DineSPaceHeader />
+      <ScrollView
+        contentContainerStyle={{ paddingBottom: 20 }} // Ensures space at the bottom for scrolling
+        showsVerticalScrollIndicator={false}
+      >
 
-      {/* Main Body */}
-      <View style={styles.body_container}>
-        <Text style={styles.signup_title}>Let's Get You Started</Text>
 
-        <Text style={styles.label}>Full Name</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Enter your full name"
-          value={userName}
-          onChangeText={handleInputChange(setUserName)}
-        />
+        {/* Header */}
+        <DineSPaceHeader route={'/(auth)/startPage'} />
 
-        <Text style={styles.label}>Email Address</Text>
-        <TextInput style={styles.input}
-          placeholder='Enter your email address'
-          value={email}
-          onChangeText={handleInputChange(setEmail)}
-          keyboardType='email-address'
-        />
+        {/* Main Body */}
+        <View style={styles.body_container}>
+          <Text style={styles.signup_title}>Let's Get You Started</Text>
 
-        <Text style={styles.label}>Password</Text>
-        <TextInput style={styles.input}
-          placeholder='Enter your password'
-          value={password}
-          onChangeText={handleInputChange(setPassword)}
-          secureTextEntry />
+          <Text style={styles.label}>Full Name</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Enter your full name"
+            value={userName}
+            onChangeText={handleInputChange(setUserName)}
+          />
 
-        {
-          ErrorMessage && (
-            <Text className="text-red-500 mb-4 text-center"> {ErrorMessage}</Text>
-          )
-        }
+          <Text style={styles.label}>Email Address</Text>
+          <TextInput style={styles.input}
+            placeholder='Enter your email address'
+            value={email}
+            onChangeText={handleInputChange(setEmail)}
+            keyboardType='email-address'
+          />
 
-        <TouchableOpacity style={styles.button_style} onPress={handleSignup} >
-          <Text style={styles.button_text}>Sign Up</Text>
-        </TouchableOpacity>
+          <Text style={styles.label}>Password</Text>
+          <TextInput style={styles.input}
+            placeholder='Enter your password'
+            value={password}
+            onChangeText={handleInputChange(setPassword)}
+            secureTextEntry />
 
-        {
-          emailSent && (
-            <Text className='text-green-500 mt-4 text-center' >A verification email has been sent to your email address. Please verfiy yourself before login</Text>
-          )
-        }
+          {
+            ErrorMessage && (
+              <Text className="text-red-500 mb-4 text-center"> {ErrorMessage}</Text>
+            )
+          }
 
-        <Text style={styles.login_text}>
-          Already an user? <Link href={"/(auth)/login"} style={styles.red_colors} >LogIn</Link>
-        </Text>
-      </View>
+          <TouchableOpacity style={styles.button_style} onPress={handleSignup} >
+            <Text style={styles.button_text}>Sign Up</Text>
+          </TouchableOpacity>
 
-      {/* Blank Space */}
-      <View style={{ flex: 1 }}></View>
+          {
+            emailSent && (
+              <Text className='text-green-500 mt-4 text-center' >A verification email has been sent to your email address. Please verfiy yourself before login</Text>
+            )
+          }
+
+          <Text style={styles.login_text}>
+            Already an user? <Link href={"/(auth)/login"} style={styles.red_colors} >LogIn</Link>
+          </Text>
+        </View>
+
+        {/* Blank Space */}
+        <View style={{ flex: 1 }}></View>
+        
+      </ScrollView>
     </SafeAreaView>
   );
 };

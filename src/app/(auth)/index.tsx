@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Image, ActivityIndicator } from 'react-native'
+import { View, Text, StyleSheet, Image, ActivityIndicator, StatusBar } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import imagePath from '@/src/constants/imagePath'
@@ -16,6 +16,9 @@ const Auth = () => {
       }, 1000)
     }, 1000)
 
+
+    StatusBar.setBarStyle('dark-content');
+    StatusBar.setBackgroundColor('#F49B33');
     return () => {
       clearTimeout(timeout);
     }

@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TextInput, Button, TouchableOpacity } from 'react-native'
+import { View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native'
 import React, { useState } from 'react'
 import { Link } from 'expo-router'
 import { useRouter } from 'expo-router'
@@ -21,26 +21,36 @@ export default function LoginMain() {
         }
     }
 
-
     const handleLogin = () => {
-        setErrorMessage(""); // Clear previous errors
+        setErrorMessage(""); // Clear any previous error messages
         signInWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
                 const user = userCredential.user;
 
-                if (user.emailVerified) {
-                    router.push("/(main)/(tabs)");
-                } else {
-                    setErrorMessage('Please verify your email address');
-                }
-                setEmail('');
-                setPassword('');
+                // Reload the user's data to get the latest email verification status
+                user.reload().then(() => {
+                    if (user.emailVerified) {
+                        router.push("/(main)/(tabs)"); // Redirect to the main section
+                    } else {
+                        setErrorMessage("Please verify your email address.");
+                    }
+                }).catch((error) => {
+                    console.error("Error reloading user data:", error);
+                    setErrorMessage("An error occurred while verifying email status.");
+                });
+
+                // Clear input fields after login
+                setTimeout( () => {
+                    setEmail('');
+                    setPassword('');
+                },2000)
             })
             .catch((error) => {
-                const ErrorMsg = error.message; // Correct property name
-                setErrorMessage(ErrorMsg);
+                const ErrorMsg = error.message; // Capture error message
+                setErrorMessage(ErrorMsg); // Display error message
             });
     };
+
 
 
     return (
@@ -74,7 +84,7 @@ export default function LoginMain() {
 
 
 
-            <TouchableOpacity style={styles.button_style} onPress={handleLogin} >
+            <TouchableOpacity style={styles.button_style} onPress={handleLogin}>
                 <Text style={styles.button_text}>LogIn</Text>
             </TouchableOpacity>
 
@@ -136,37 +146,3 @@ const styles = StyleSheet.create({
         fontWeight: 700,
     },
 })
-
-
-// Garbage Code
-{/* {
-                    visible && (
-                      <CountryPicker
-                      visible={true} onClose={() => setVisible(false)} 
-                      onSelect={(e: any) => {
-                        setCountryCode(`+ ${e.callingCode[0]}`)
-                        setCountryName(e.name)
-                    }} />
-                    )} */}
-{/* Dropdown Container */ }
-{/* <TouchableOpacity style={styles.dropdown_container} onPress={() => setVisible(true)}>
-                                <View />
-                                <Text style={styles.countery_name}>{countryName}</Text>
-                                <AntDesign
-                                  name="caretdown"
-                                  size={12}
-                                  color="black"
-                                />
-                              </TouchableOpacity>
-                              <View style={styles.horizontal_line} /> */}
-
-{/* Phone Number */ }
-{/* <View style={styles.phone_container}>
-                                <TextInput style={styles.number_input} keyboardType='numeric' maxLength={10} placeholder='Enter your number' onPress={() => setVisible(true)} />
-                                <Text style={styles.country_code}>{countryCode}</Text>
-                                <TextInput style={styles.number_input} keyboardType='numeric' maxLength={10} placeholder='Enter your number' onPress={() => setVisible(true)} />
-                              </View> */}
-
-
-
-{/*  Login with google */ }

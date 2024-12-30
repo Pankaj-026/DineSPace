@@ -4,7 +4,7 @@
     "slug": "sp-app",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./src/assets/images/icon.png",
+    "icon": "./src/assets/images1/icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -13,7 +13,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./src/assets/images/adaptive-icon.png",
+        "foregroundImage": "./src/assets/images1/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.Redeye.DineSPace",
@@ -22,7 +22,7 @@
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./src/assets/images/favicon.png"
+      "favicon": "./src/assets/images1/favicon.png"
     },
     "plugins": [
       "@react-native-google-signin/google-signin",
@@ -30,7 +30,7 @@
       [
         "expo-splash-screen",
         {
-          "image": "./src/assets/images/splash.png",
+          "image": "./src/assets/images1/splash.png",
           "imageWidth": 200,
           "resizeMode": "cover",
           "backgroundColor": "#ffffff"

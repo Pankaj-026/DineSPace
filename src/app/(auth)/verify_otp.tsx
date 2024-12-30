@@ -102,7 +102,7 @@ const Verify_otp = () => {
 
   return (
     <View style={styles.container}>
-      <DineSPaceHeader />
+      <DineSPaceHeader route={'/(auth)/startPage'}/>
 
       <Text style={styles.title}>One Time Password</Text>
       <Text style={styles.infoText}>
@@ -162,7 +162,7 @@ const Verify_otp = () => {
         style={[styles.button, !isButtonEnabled && styles.buttonDisabled]}
         disabled={!isButtonEnabled}
       >
-        <Link href={"/(main)"}>
+        <Link href={"/(main)/(tabs)"}>
           <Text style={styles.buttonText}>Sign Up</Text>
         </Link>
       </TouchableOpacity>
