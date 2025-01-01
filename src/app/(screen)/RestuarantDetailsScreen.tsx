@@ -11,6 +11,7 @@ import {
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { RouteProp } from "@react-navigation/native";
 import RouteParamList  from "@/src/components/RestuarantList";
+import { router } from "expo-router";
 
 // type RestaurantDetailsProps = {
 //     route: RouteProp<RouteParamList, "RestaurantDetails">;
@@ -189,7 +190,7 @@ export default function RestaurantDetailsScreen() {
             {!keyboardVisible && (
                 <View className="absolute bottom-0 left-0 right-0 p-4 bg-white border-t border-gray-300 shadow-md"
                 >
-                    <TouchableOpacity className="bg-[#F49B33] py-3 rounded-md">
+                    <TouchableOpacity className="bg-[#F49B33] py-3 rounded-md" onPress={() => router.push("/(screen)/Bookings")}>
                         <Text className="text-center text-white font-bold text-lg">
                             Book a Table
                         </Text>

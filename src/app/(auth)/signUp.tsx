@@ -65,7 +65,7 @@ const SignUp = () => {
 
 
         {/* Header */}
-        <DineSPaceHeader route={'/(auth)/startPage'} />
+        <DineSPaceHeader route={'/(auth)/startPage'} name="DineSPace" />
 
         {/* Main Body */}
         <View style={styles.body_container}>

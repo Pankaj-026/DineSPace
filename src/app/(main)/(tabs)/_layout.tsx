@@ -42,6 +42,7 @@ const TabRootLayout = () => {
           name="order"
           options={{
             title: 'Bookings',
+            headerShown: false,
             tabBarIcon: ({ color }) => <FontAwesome6 size={24} name="calendar" color={color} />,
           }}
         />
@@ -49,6 +50,7 @@ const TabRootLayout = () => {
           name="profile"
           options={{
             title: 'Profile',
+            headerShown: false,
             tabBarIcon: ({ color }) => <FontAwesome size={28} name="user" color={color} />,
           }}
         />

@@ -40,10 +40,9 @@ export default function LoginMain() {
                 });
 
                 // Clear input fields after login
-                setTimeout( () => {
                     setEmail('');
                     setPassword('');
-                },2000)
+               
             })
             .catch((error) => {
                 const ErrorMsg = error.message; // Capture error message

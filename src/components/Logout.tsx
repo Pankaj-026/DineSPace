@@ -27,11 +27,11 @@ const LogoutButton = () => {
     return (
         <View>
             {errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : null}
-            <TouchableOpacity onPress={handleLogout} style={styles.button}>
+            <TouchableOpacity onPress={handleLogout}  className="flex-row items-center py-4">
                 {isLoading ? (
                     <ActivityIndicator size="small" color="#ffffff" />
                 ) : (
-                    <Text style={styles.buttonText}>Log out</Text>
+                    <Text className="text-base font-bold text-red-500 flex-1">Logout</Text>
                 )}
             </TouchableOpacity>
         </View>

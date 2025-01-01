@@ -1,6 +1,8 @@
 import DineSpace_Header from '@/src/components/DineSPace-header';
+import { router } from 'expo-router';
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
+
 
 const BookingScreen = () => {
   const [selectedOption, setSelectedOption] = useState('Pre-Order'); // Pre-Order or Walk-in
@@ -11,7 +13,7 @@ const BookingScreen = () => {
   const handleProceed = () => {
     if (!date || !time) {
       Alert.alert('Error', 'Please select a date and time!');
-      return;
+      router.push('/(main)/(tabs)/order')
     }
 
     Alert.alert(
@@ -115,7 +117,14 @@ const BookingScreen = () => {
       {/* Proceed Button */}
       <TouchableOpacity
         className="bg-[#F49B33] p-4 rounded-lg"
-        onPress={handleProceed}
+        onPress={() =>{
+          if (!date || !time) {
+            Alert.alert('Error', 'Please select a date and time!');
+          }else{
+            router.push('/(main)/(tabs)/order')
+          }
+        }
+        }
       >
         <Text className="text-center text-lg text-white">Proceed</Text>
       </TouchableOpacity>

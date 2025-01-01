@@ -13,7 +13,7 @@ const login = () => {
                 contentContainerStyle={{ paddingBottom: 20 }} // Ensures space at the bottom for scrolling
                 showsVerticalScrollIndicator={false}
             >
-                <HeaderComponent route={'/(auth)/startPage'} />
+                <HeaderComponent route={'/(auth)/startPage'} name="DineSPace" />
                 <LoginBody />
                 <View style={{ flex: 1 }}></View>
 
