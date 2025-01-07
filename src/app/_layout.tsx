@@ -12,7 +12,7 @@ SplashScreen.preventAutoHideAsync();
 
 const RootLayout = ({values}:any) => {
 
-    const [isLogin, setIsLogin] = useState(true);
+    const [isLogin, setIsLogin] = useState(false);
 
 
     useEffect(() => {

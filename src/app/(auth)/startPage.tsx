@@ -1,51 +1,17 @@
 import { View, Text, StyleSheet, Image, TouchableOpacity, Animated, Easing } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import React, { useEffect, useRef } from 'react';
-import { Link } from 'expo-router';
 import { AntDesign } from '@expo/vector-icons';
 import imagePath from '@/src/constants/imagePath';
-// import auth from '@react-native-firebase/auth'
-// import { GoogleSignin } from '@react-native-google-signin/google-signin';
-
-// GoogleSignin.configure({
-//   webClientId: '861437992056-838qcfsi23lrfoatkich6tuh4uqd5na1.apps.googleusercontent.com',
-//   scopes: ["profile", "email"]
-// })
+// import {signInWithPopup, GoogleAuthProvider} from 'firebase/auth'
+// import {auth } from "@/firebase.config"
+import { Link, useRouter } from 'expo-router'; // Import useRouter hook
+import 'expo-dev-client'
 
 const StartPage = () => {
-  const fadeAnim = useRef(new Animated.Value(0)).current; // Animation for fade-in
-  // Google auth
-
-  // async function onGoogleButtonPress() {
-  //   try {
-  //     // Sign out any existing sessions
-  //     await GoogleSignin.signOut();
-
-  //     // Perform Google sign-in and get idToken
-  //     const { idToken }: any = await GoogleSignin.signIn();
-
-  //     if (!idToken) {
-  //       throw new Error("Google Sign-In failed: No idToken returned.");
-  //     }
-
-  //     // Create Firebase credential with idToken
-  //     const googleCredential = auth.GoogleAuthProvider.credential(idToken);
-
-  //     // Sign in to Firebase
-  //     const userCredential = await auth().signInWithCredential(googleCredential);
-
-  //     console.log("Signed in with Google:", userCredential.user);
-  //     return userCredential;
-  //   } catch (error: any) {
-  //     console.error("Google sign-in error:", error);
-  //     alert(error.message || "An unknown error occurred.");
-  //   }
-  // }
-
-
-
-
-
+  const router = useRouter(); // Initialize the router
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  
   // Animate main content on mount
   useEffect(() => {
     Animated.timing(fadeAnim, {
@@ -55,8 +21,26 @@ const StartPage = () => {
       useNativeDriver: true,
     }).start();
   }, [fadeAnim]);
-
-
+  
+  
+  //! For Web
+  // const googleProvider = new GoogleAuthProvider();
+  // const signInWithGoogle = () => {
+  //   signInWithPopup(auth, googleProvider)
+  //     .then((result) => {
+  //       const credential = GoogleAuthProvider.credentialFromResult(result);
+  //       const token = credential?.accessToken;
+  //       const user = result.user;
+  //       // Navigate on successful login
+  //       router.push('/(main)/(tabs)');
+  //     })
+  //     .catch((error) => {
+  //       const errorCode = error.code;
+  //       const errorMessage = error.message;
+  //       const email = error.customData.email;
+  //       const credential = GoogleAuthProvider.credentialFromError(error);
+  //     });
+  // };
 
 
   return (
@@ -75,12 +59,7 @@ const StartPage = () => {
             </Link>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.button}
-          // onPress={() =>
-          // onGoogleButtonPress().then((val) =>
-          //   console.log(val, "Signed in with Google!")
-          // ) }
-          >
+          <TouchableOpacity style={styles.button}>
             <AntDesign name="google" size={18} color="white" />
             <Text style={styles.button_text}>Sign up With Google</Text>
           </TouchableOpacity>

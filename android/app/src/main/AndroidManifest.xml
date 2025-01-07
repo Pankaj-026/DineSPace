@@ -26,6 +26,7 @@
         <category android:name="android.intent.category.BROWSABLE"/>
         <data android:scheme="myapp"/>
         <data android:scheme="com.Redeye.DineSPace"/>
+        <data android:scheme="exp+sp-app"/>
       </intent-filter>
     </activity>
   </application>

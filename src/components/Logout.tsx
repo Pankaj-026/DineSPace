@@ -15,7 +15,7 @@ const LogoutButton = () => {
 
         try {
             await signOut(auth);
-            router.replace('/(auth)/login'); // Redirect to login
+            router.replace('/(auth)/login'); 
         } catch (error: any) {
             console.error('Error during logout:', error.message);
             setErrorMessage("Failed to log out. Please try again.");

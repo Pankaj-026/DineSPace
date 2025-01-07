@@ -1,59 +1,76 @@
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import React, { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Link } from 'expo-router';
 import DineSPaceHeader from '@/src/components/DineSPace-header';
-import { useRouter } from 'expo-router';
+// import { useRouter } from 'expo-router';
 import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth'
-import { auth, db } from "@/firebase.config"
-import { doc, setDoc } from 'firebase/firestore';
+// import { auth, db } from "@/firebase.config"
+// import { doc, setDoc } from 'firebase/firestore';
+import { signup } from '@/services/api'
 
+const SignUp = ({ navigation }: any) => {
 
-const SignUp = () => {
-
-  const router = useRouter();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  // const router = useRouter();
+  // const [email, setEmail] = useState("");
+  // const [password, setPassword] = useState("");
+  // const [emailSent, setEmailSent] = useState(false)
+  // const [userName, setUserName] = useState("");
+  
+  const [formData, setFormData] = useState({ name: "", email: "", password: "" });
   const [ErrorMessage, setErrorMessage] = useState("");
-  const [emailSent, setEmailSent] = useState(false)
-  const [userName, setUserName] = useState("");
 
-  const handleInputChange = (setter: any) => (value: any) => {
-    setter(value)
-    if (ErrorMessage) {
-      setErrorMessage("")
+  // const handleInputChange = (setter: any) => (value: any) => {
+  //   setter(value)
+  //   if (ErrorMessage) {
+  //     setErrorMessage("")
+  //   }
+  // }
+
+  // const handleSignup = () => {
+  //   createUserWithEmailAndPassword(auth, email, password)
+  //     .then((userCredential) => {
+  //       const user = userCredential.user;
+
+  //       setDoc(doc(db, 'users', user.uid), {
+  //         name: userName,
+  //         email: user.email,
+  //       }).catch((error) => {
+  //         console.error("Error writing to Firestore:", error);
+  //         setErrorMessage("Failed to save user data. Please try again.");
+  //       });
+
+  //       sendEmailVerification(user)
+  //         .then(() => {
+  //           alert(`A verification link has been sent to ${email}. Please verify your email.`);
+  //           router.push('/(auth)/login')
+  //         })
+  //         .catch((error) => setErrorMessage("Error sending verification email"))
+  //       setEmail('')
+  //       setPassword('')
+  //       setUserName('');
+
+  //     })
+  //     .catch((error) => {
+  //       const ErrorMsg = error.message;
+  //       setErrorMessage(ErrorMsg)
+  //     })
+  // }
+
+  const handleChange = (key: any, value: any) => {
+    setFormData({ ...formData, [key]: value });
+  };
+
+  const handleSubmit = async () => {
+    try {
+      const response = await signup(formData);
+      Alert.alert("Success", response.data.message);
+      navigation.navigate("./login.tsx");
+    } catch (error: any) {
+      setErrorMessage(error.response?.data?.message)
+      Alert.alert("Error", error.response?.data?.message || "An error occurred");
     }
-  }
-
-  const handleSignup = () => {
-    createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        const user = userCredential.user;
-
-        setDoc(doc(db, 'users', user.uid), {
-          name: userName,
-          email: user.email,
-        }).catch((error) => {
-          console.error("Error writing to Firestore:", error);
-          setErrorMessage("Failed to save user data. Please try again.");
-        });
-
-        sendEmailVerification(user)
-          .then(() => {
-            alert(`A verification link has been sent to ${email}. Please verify your email.`);
-            router.push('/(auth)/login')
-          })
-          .catch((error) => setErrorMessage("Error sending verification email"))
-        setEmail('')
-        setPassword('')
-        setUserName('');
-
-      })
-      .catch((error) => {
-        const ErrorMsg = error.message;
-        setErrorMessage(ErrorMsg)
-      })
-  }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -75,23 +92,23 @@ const SignUp = () => {
           <TextInput
             style={styles.input}
             placeholder="Enter your full name"
-            value={userName}
-            onChangeText={handleInputChange(setUserName)}
+            value={formData.name}
+            onChangeText={(text) => handleChange("name", text)}
           />
 
           <Text style={styles.label}>Email Address</Text>
           <TextInput style={styles.input}
             placeholder='Enter your email address'
-            value={email}
-            onChangeText={handleInputChange(setEmail)}
+            value={formData.email}
+            onChangeText={(text) => handleChange("email", text)}
             keyboardType='email-address'
           />
 
           <Text style={styles.label}>Password</Text>
           <TextInput style={styles.input}
             placeholder='Enter your password'
-            value={password}
-            onChangeText={handleInputChange(setPassword)}
+            value={formData.password}
+            onChangeText={(text) => handleChange("password", text)}
             secureTextEntry />
 
           {
@@ -100,15 +117,10 @@ const SignUp = () => {
             )
           }
 
-          <TouchableOpacity style={styles.button_style} onPress={handleSignup} >
+          <TouchableOpacity style={styles.button_style} onPress={handleSubmit} >
             <Text style={styles.button_text}>Sign Up</Text>
           </TouchableOpacity>
 
-          {
-            emailSent && (
-              <Text className='text-green-500 mt-4 text-center' >A verification email has been sent to your email address. Please verfiy yourself before login</Text>
-            )
-          }
 
           <Text style={styles.login_text}>
             Already an user? <Link href={"/(auth)/login"} style={styles.red_colors} >LogIn</Link>
@@ -117,7 +129,7 @@ const SignUp = () => {
 
         {/* Blank Space */}
         <View style={{ flex: 1 }}></View>
-        
+
       </ScrollView>
     </SafeAreaView>
   );

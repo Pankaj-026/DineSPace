@@ -1,55 +1,73 @@
-import { View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native'
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Alert } from 'react-native'
 import React, { useState } from 'react'
 import { Link } from 'expo-router'
 import { useRouter } from 'expo-router'
-import { signInWithEmailAndPassword } from 'firebase/auth'
-import { auth } from '@/firebase.config'
+// import { signInWithEmailAndPassword } from 'firebase/auth'
+// import { auth } from '@/firebase.config'
+import { login } from "@/services/api";
 
 export default function LoginMain() {
 
 
     const router = useRouter();
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+    // const [email, setEmail] = useState("");
+    // const [password, setPassword] = useState("");
     const [ErrorMessage, setErrorMessage] = useState("");
 
 
-    const handleInputChange = (setter: any) => (value: any) => {
-        setter(value)
-        if (ErrorMessage) {
-            setErrorMessage("")
-        }
-    }
+    // const handleInputChange = (setter: any) => (value: any) => {
+    //     setter(value)
+    //     if (ErrorMessage) {
+    //         setErrorMessage("")
+    //     }
+    // }
 
-    const handleLogin = () => {
-        setErrorMessage(""); // Clear any previous error messages
-        signInWithEmailAndPassword(auth, email, password)
-            .then((userCredential) => {
-                const user = userCredential.user;
+    // const handleLogin = () => {
+    //     setErrorMessage(""); // Clear any previous error messages
+    //     signInWithEmailAndPassword(auth, email, password)
+    //         .then((userCredential) => {
+    //             const user = userCredential.user;
 
-                // Reload the user's data to get the latest email verification status
-                user.reload().then(() => {
-                    if (user.emailVerified) {
-                        router.push("/(main)/(tabs)"); // Redirect to the main section
-                    } else {
-                        setErrorMessage("Please verify your email address.");
-                    }
-                }).catch((error) => {
-                    console.error("Error reloading user data:", error);
-                    setErrorMessage("An error occurred while verifying email status.");
-                });
+    //             // Reload the user's data to get the latest email verification status
+    //             user.reload().then(() => {
+    //                 if (user.emailVerified) {
+    //                     router.push("/(main)/(tabs)"); // Redirect to the main section
+    //                 } else {
+    //                     setErrorMessage("Please verify your email address.");
+    //                 }
+    //             }).catch((error) => {
+    //                 console.error("Error reloading user data:", error);
+    //                 setErrorMessage("An error occurred while verifying email status.");
+    //             });
 
-                // Clear input fields after login
-                    setEmail('');
-                    setPassword('');
-               
-            })
-            .catch((error) => {
-                const ErrorMsg = error.message; // Capture error message
-                setErrorMessage(ErrorMsg); // Display error message
-            });
+    //             // Clear input fields after login
+    //                 setEmail('');
+    //                 setPassword('');
+
+    //         })
+    //         .catch((error) => {
+    //             const ErrorMsg = error.message; // Capture error message
+    //             setErrorMessage(ErrorMsg); // Display error message
+    //         });
+    // };
+
+    const [formData, setFormData] = useState({ email: "", password: "" });
+
+    const handleChange = (key: any, value: any) => {
+        setFormData({ ...formData, [key]: value });
     };
 
+    const handleSubmit = async () => {
+        try {
+            const response = await login(formData);
+            Alert.alert("Success", "Login Successful!");
+            console.log(response.data.token); // Store token securely later
+            router.push('/(main)/(tabs)')
+        } catch (error: any) {
+            setErrorMessage(error.response?.data?.message);
+            Alert.alert("Error", error.response?.data?.message || "An error occurred");
+        }
+    };
 
 
     return (
@@ -60,16 +78,16 @@ export default function LoginMain() {
             <Text style={styles.label}>Email Address</Text>
             <TextInput style={styles.input}
                 placeholder='Enter your email address'
-                value={email}
-                onChangeText={handleInputChange(setEmail)}
+                value={formData.email}
+                onChangeText={(text) => handleChange("email", text)}
                 keyboardType='email-address'
             />
 
             <Text style={styles.label}>Password</Text>
             <TextInput style={styles.input}
                 placeholder='Enter your password'
-                value={password}
-                onChangeText={handleInputChange(setPassword)}
+                value={formData.password}
+                onChangeText={(text) => handleChange("password", text)}
                 secureTextEntry
             />
 
@@ -83,7 +101,7 @@ export default function LoginMain() {
 
 
 
-            <TouchableOpacity style={styles.button_style} onPress={handleLogin}>
+            <TouchableOpacity style={styles.button_style} onPress={handleSubmit}>
                 <Text style={styles.button_text}>LogIn</Text>
             </TouchableOpacity>
 
