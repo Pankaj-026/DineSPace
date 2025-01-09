@@ -4,11 +4,34 @@ const connectDB = require("./config/db");
 const userRoutes = require("./routes/userRoutes");
 const cors = require('cors');
 const morgan = require('morgan');
+const multer = require('multer');
+const cloudinary = require('cloudinary').v2;
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
+const Restaurant = require('./model/restaurant');
 
 dotenv.config();
 connectDB();
 
 const app = express();
+
+
+
+// Cloudinary Configuration
+cloudinary.config({
+  cloud_name: process.env.cloud_name, // Replace with your Cloudinary cloud name
+  api_key: process.env.api_key,       // Replace with your Cloudinary API key
+  api_secret: process.env.api_secret, // Replace with your Cloudinary API secret
+});
+
+// Multer Storage for Cloudinary
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+      folder: 'restaurants', // Folder name in Cloudinary
+      allowed_formats: ['jpg', 'jpeg', 'png'], // Allowed file formats
+  },
+});
+const upload = multer({ storage });
 
 // Middleware
 app.use(express.json()); // Use built-in body parser
