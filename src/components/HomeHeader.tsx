@@ -1,34 +1,24 @@
 import { View, Text, Image } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import { doc, getDoc } from 'firebase/firestore';
-import { auth, db } from '@/firebase.config';
 import NoUserProfile from "@/src/constants/imagePath";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const HomeHeader = () => {
 
 
-    const [userName, setUserName] = useState('');
-    
-      useEffect(() => {
-        const fetchUserData = async () => {
-          const user = auth.currentUser;
-          if (user) {
-            try {
-              const docRef = doc(db, 'users', user.uid);
-              const docSnap = await getDoc(docRef);
-              if (docSnap.exists()) {
-                setUserName(docSnap.data().name);
-              } else {
-                console.log("No such document!");
-              }
-            } catch (error) {
-              console.error("Error fetching user data:", error);
-            }
-          }
-        };
-      
-        fetchUserData();
-      }, []);
+  const [userData, setUserData] = useState<{ name: string; email: string }>({ name: "", email: "" });
+
+  // Fetch user data on component mount
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const storedData = await AsyncStorage.getItem("userData");
+      if (storedData) {
+        setUserData(JSON.parse(storedData));
+      }
+    };
+
+    fetchUserData();
+  }, []);
 
     return (
         <View className='flex-row justify-between items-center px-2'>
@@ -51,7 +41,7 @@ const HomeHeader = () => {
                 <View>
                     <Text className='text-base text-neutral-100  font-medium size-22'>Welcome Back</Text>
                     
-                    <Text className='text-base size-18 whitespace-nowrap dark:text-white font-bold'>{userName}</Text>
+                    <Text className='text-base size-18 whitespace-nowrap dark:text-white font-bold'>{userData.name}</Text>
                 </View>
             </View>
             

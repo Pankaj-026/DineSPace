@@ -4,45 +4,46 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import HomeHeader from '@/src/components/HomeHeader';
 import RestaurantCard from '@/src/components/RestuarantCard';
 import RestuarantImg from '@/src/constants/imagePath';
-import RestuarantList from '@/src/components/RestuarantList';
 import { FontAwesome, MaterialIcons } from '@expo/vector-icons';
+import axios from 'axios';  // Axios for API calls
 
 const Home = () => {
     const [isPending, setIsPending] = useState(false);
-    const [restuarants, setRestuarants] = useState(RestuarantList);
+    const [restaurants, setRestaurants] = useState([]);  // Dynamically loaded restaurant data
     const [searchText, setSearchText] = useState("");
-    const [isKeyboardVisible, setIsKeyboardVisible] = useState(false); // Track keyboard visibility
+    const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
 
-    function filteredData(searchText: any, restuarants: any) {
-        return restuarants.filter((res: any) =>
-            res.name.toLowerCase().includes(searchText.toLowerCase())
-        );
-    }
-
+    // Fetch restaurant data from backend
     useEffect(() => {
         setIsPending(true);
-        setTimeout(() => {
-            setIsPending(false);
-        }, 3000);
+        axios.get('http://192.168.0.101:5106/api/restaurants')
+            .then(response => setRestaurants(response.data))
+            .catch(error => console.error('Error fetching data:', error))
+            .finally(() => setIsPending(false));
 
         StatusBar.setBarStyle('light-content');
         StatusBar.setBackgroundColor('#F49B33');
 
-        // Keyboard event listeners to hide or show tabs based on keyboard visibility
+        // Keyboard event listeners
         const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
             setIsKeyboardVisible(true);
         });
-
         const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
             setIsKeyboardVisible(false);
         });
 
-        // Clean up event listeners on component unmount
+        // Cleanup listeners
         return () => {
             keyboardDidHideListener.remove();
             keyboardDidShowListener.remove();
         };
     }, []);
+
+    function filteredData(searchText: string, restaurants: any) {
+        return restaurants.filter((res: any) =>
+            res.name.toLowerCase().includes(searchText.toLowerCase())
+        );
+    }
 
     return (
         <SafeAreaView className='flex-1 bg-[#F5F7FA] relative'>
@@ -54,16 +55,13 @@ const Home = () => {
             )}
 
             <ScrollView
-                contentContainerStyle={{ paddingBottom: 20 }} // Ensures space at the bottom for scrolling
+                contentContainerStyle={{ paddingBottom: 20 }}
                 showsVerticalScrollIndicator={false}
             >
                 {/* Header Section */}
                 <View
-                    className={`h-80 justify-start border-orange-600 w-full bg-[#F49B33] ${isKeyboardVisible ? 'mb-0' : ''}`} // Hide tabs when keyboard is visible
-                    style={{
-                        borderBottomEndRadius: 25,
-                        borderBottomStartRadius: 25,
-                    }}
+                    className={`h-80 justify-start border-orange-600 w-full bg-[#F49B33] ${isKeyboardVisible ? 'mb-0' : ''}`}
+                    style={{ borderBottomEndRadius: 25, borderBottomStartRadius: 25 }}
                 >
                     <HomeHeader />
 
@@ -78,10 +76,12 @@ const Home = () => {
                             onChange={(e) => {
                                 setSearchText(e.nativeEvent.text);
                                 if (!e.nativeEvent.text) {
-                                    setRestuarants(RestuarantList);
+                                    axios.get('http://localhost:5000/api/restaurants')
+                                        .then(response => setRestaurants(response.data))
+                                        .catch(error => console.error('Error fetching data:', error));
                                 } else {
-                                    const data = filteredData(e.nativeEvent.text, RestuarantList);
-                                    setRestuarants(data);
+                                    const data = filteredData(e.nativeEvent.text, restaurants);
+                                    setRestaurants(data);
                                 }
                             }}
                         />
@@ -94,9 +94,9 @@ const Home = () => {
 
                 {/* Restaurant Cards */}
                 <View className="px-4 mt-4">
-                    {restuarants.length > 0 ? (
-                        restuarants.map((restaurant:any) => (
-                            <RestaurantCard key={restaurant.id} {...restaurant}  />
+                    {restaurants.length > 0 ? (
+                        restaurants.map((restaurant: any) => (
+                            <RestaurantCard key={restaurant._id} {...restaurant} />
                         ))
                     ) : (
                         <Text className="text-center text-gray-600 mt-10 font-medium">

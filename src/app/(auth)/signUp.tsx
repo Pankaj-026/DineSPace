@@ -4,7 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Link } from 'expo-router';
 import DineSPaceHeader from '@/src/components/DineSPace-header';
 // import { useRouter } from 'expo-router';
-import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth'
+// import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth'
 // import { auth, db } from "@/firebase.config"
 // import { doc, setDoc } from 'firebase/firestore';
 import { signup } from '@/services/api'
@@ -16,7 +16,7 @@ const SignUp = ({ navigation }: any) => {
   // const [password, setPassword] = useState("");
   // const [emailSent, setEmailSent] = useState(false)
   // const [userName, setUserName] = useState("");
-  
+
   const [formData, setFormData] = useState({ name: "", email: "", password: "" });
   const [ErrorMessage, setErrorMessage] = useState("");
 
@@ -64,7 +64,9 @@ const SignUp = ({ navigation }: any) => {
   const handleSubmit = async () => {
     try {
       const response = await signup(formData);
-      Alert.alert("Success", response.data.message);
+      Alert.alert("Success : ", response.data.message);
+      window.alert("Success: " + response.data.message);
+      setFormData({ name: "", email: "", password: "" })
       navigation.navigate("./login.tsx");
     } catch (error: any) {
       setErrorMessage(error.response?.data?.message)

@@ -1,53 +1,38 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, Image, TouchableOpacity, ScrollView } from 'react-native';
-import { doc, getDoc } from 'firebase/firestore';
-import { auth, db } from '@/firebase.config';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import LogoutButton from '@/src/components/Logout';
 import DineSpace_Header from '@/src/components/DineSPace-header';
+import { router } from 'expo-router';
 
 const Profile = () => {
-  const [userName, setUserName] = useState('');
-  const [userEmail, setUserEmail] = useState('');
+  const [userData, setUserData] = useState<{ name: string; email: string }>({ name: "", email: "" });
 
+  // Fetch user data on component mount
   useEffect(() => {
-
     const fetchUserData = async () => {
-      const user = auth.currentUser;
-      if (user) {
-        try {
-          const docRef = doc(db, 'users', user.uid);
-          const docSnap = await getDoc(docRef);
-          if (docSnap.exists()) {
-            setUserName(docSnap.data().name);
-            setUserEmail(docSnap.data().email);
-          } else {
-            console.log("No such document!");
-          }
-        } catch (error) {
-          console.error("Error fetching user data:", error);
-        }
+      const storedData = await AsyncStorage.getItem("userData");
+      if (storedData) {
+        setUserData(JSON.parse(storedData));
       }
     };
 
     fetchUserData();
   }, []);
 
-
   return (
     <ScrollView className="flex-1 bg-gray-100">
       {/* Header */}
-      <DineSpace_Header route={'/(main)/(tabs)'} name= "Profile" />
+      <DineSpace_Header route={'/(main)/(tabs)'} name="Profile" />
 
       {/* Profile Section */}
       <View className="bg-white p-6 m-4 rounded-lg shadow items-center">
         <Image
-          source={{
-            uri: 'https://via.placeholder.com/150', // Replace with the user's profile image URL
-          }}
+          source={{ uri: 'https://via.placeholder.com/150' }}
           className="w-24 h-24 rounded-full mb-4"
         />
-        <Text className="text-lg font-bold">{userName}</Text>
-        <Text className="text-sm text-gray-500">{userEmail}</Text>
+        <Text className="text-lg font-bold">{userData.name || "User Name"}</Text>
+        <Text className="text-sm text-gray-500">{userData.email || "user@example.com"}</Text>
         <Text className="text-sm text-gray-500">+91 1234567890</Text>
       </View>
 
@@ -58,7 +43,7 @@ const Profile = () => {
           <Text className="text-gray-400">{'>'}</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity className="flex-row items-center py-4 border-b border-gray-200">
+        <TouchableOpacity className="flex-row items-center py-4 border-b border-gray-200" onPress={() => router.push("/(admin)/admin")}>
           <Text className="text-base font-bold text-black flex-1">View Bookings</Text>
           <Text className="text-gray-400">{'>'}</Text>
         </TouchableOpacity>
@@ -68,7 +53,7 @@ const Profile = () => {
           <Text className="text-gray-400">{'>'}</Text>
         </TouchableOpacity>
 
-       <LogoutButton />
+        <LogoutButton />
       </View>
     </ScrollView>
   );

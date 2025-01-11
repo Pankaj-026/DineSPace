@@ -1,165 +1,74 @@
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Alert } from 'react-native'
-import React, { useState } from 'react'
-import { Link } from 'expo-router'
-import { useRouter } from 'expo-router'
-// import { signInWithEmailAndPassword } from 'firebase/auth'
-// import { auth } from '@/firebase.config'
+import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
+import React, { useState } from 'react';
+import { Link, useRouter } from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { login } from "@/services/api";
 
 export default function LoginMain() {
+  const router = useRouter();
+  const [formData, setFormData] = useState({ email: "", password: "" });
+  const [ErrorMessage, setErrorMessage] = useState("");
+
+  const handleChange = (key: any, value: any) => {
+    setFormData({ ...formData, [key]: value });
+  };
 
 
-    const router = useRouter();
-    // const [email, setEmail] = useState("");
-    // const [password, setPassword] = useState("");
-    const [ErrorMessage, setErrorMessage] = useState("");
+// In the handleSubmit function after successful login:
+const handleSubmit = async () => {
+    try {
+        const response = await login(formData);
+        Alert.alert("Success", "Login Successful!");
+        const { name, email } = response.data.user;
+        
+        // Store user data securely
+        await AsyncStorage.setItem("userData", JSON.stringify({ name, email }));
+
+        router.push('/(main)/(tabs)');
+    } catch (error: any) {
+        setErrorMessage(error.response?.data?.message || "An error occurred");
+        Alert.alert("Error", error.response?.data?.message || "An error occurred");
+        console.log("Error: ", error);
+    }
+};
 
 
-    // const handleInputChange = (setter: any) => (value: any) => {
-    //     setter(value)
-    //     if (ErrorMessage) {
-    //         setErrorMessage("")
-    //     }
-    // }
+  return (
+    <View className="flex-1 justify-center px-6 py-16">
+      <Text className="text-lg font-bold text-center mb-5">Let's Get You Started</Text>
 
-    // const handleLogin = () => {
-    //     setErrorMessage(""); // Clear any previous error messages
-    //     signInWithEmailAndPassword(auth, email, password)
-    //         .then((userCredential) => {
-    //             const user = userCredential.user;
+      <Text className="text-sm font-medium mb-2">Email Address</Text>
+      <TextInput
+        className="border border-gray-300 rounded-lg px-3 py-2 mb-4 text-base"
+        placeholder="Enter your email address"
+        value={formData.email}
+        onChangeText={(text) => handleChange("email", text)}
+        keyboardType="email-address"
+      />
 
-    //             // Reload the user's data to get the latest email verification status
-    //             user.reload().then(() => {
-    //                 if (user.emailVerified) {
-    //                     router.push("/(main)/(tabs)"); // Redirect to the main section
-    //                 } else {
-    //                     setErrorMessage("Please verify your email address.");
-    //                 }
-    //             }).catch((error) => {
-    //                 console.error("Error reloading user data:", error);
-    //                 setErrorMessage("An error occurred while verifying email status.");
-    //             });
+      <Text className="text-sm font-medium mb-2">Password</Text>
+      <TextInput
+        className="border border-gray-300 rounded-lg px-3 py-2 mb-4 text-base"
+        placeholder="Enter your password"
+        value={formData.password}
+        onChangeText={(text) => handleChange("password", text)}
+        secureTextEntry
+      />
 
-    //             // Clear input fields after login
-    //                 setEmail('');
-    //                 setPassword('');
+      {ErrorMessage && (
+        <Text className="text-red-500 text-center mb-3">{ErrorMessage}</Text>
+      )}
 
-    //         })
-    //         .catch((error) => {
-    //             const ErrorMsg = error.message; // Capture error message
-    //             setErrorMessage(ErrorMsg); // Display error message
-    //         });
-    // };
+      <TouchableOpacity className="bg-[#F49B33] rounded-lg py-3 mt-2" onPress={handleSubmit}>
+        <Text className="text-white text-center font-semibold">Log In</Text>
+      </TouchableOpacity>
 
-    const [formData, setFormData] = useState({ email: "", password: "" });
-
-    const handleChange = (key: any, value: any) => {
-        setFormData({ ...formData, [key]: value });
-    };
-
-    const handleSubmit = async () => {
-        try {
-            const response = await login(formData);
-            Alert.alert("Success", "Login Successful!");
-            console.log(response.data.token); // Store token securely later
-            router.push('/(main)/(tabs)')
-        } catch (error: any) {
-            setErrorMessage(error.response?.data?.message);
-            Alert.alert("Error", error.response?.data?.message || "An error occurred");
-        }
-    };
-
-
-    return (
-
-        <View style={styles.body_container}>
-            <Text style={styles.login_title}>Let's Get You Started</Text>
-
-            <Text style={styles.label}>Email Address</Text>
-            <TextInput style={styles.input}
-                placeholder='Enter your email address'
-                value={formData.email}
-                onChangeText={(text) => handleChange("email", text)}
-                keyboardType='email-address'
-            />
-
-            <Text style={styles.label}>Password</Text>
-            <TextInput style={styles.input}
-                placeholder='Enter your password'
-                value={formData.password}
-                onChangeText={(text) => handleChange("password", text)}
-                secureTextEntry
-            />
-
-            {
-                ErrorMessage && (
-                    <Text style={{ color: 'red', marginBottom: 10, textAlign: 'center' }}>
-                        {ErrorMessage}
-                    </Text>
-                )
-            }
-
-
-
-            <TouchableOpacity style={styles.button_style} onPress={handleSubmit}>
-                <Text style={styles.button_text}>LogIn</Text>
-            </TouchableOpacity>
-
-            <Text style={styles.login_text}>
-                Don't have an account? <Link href={"/(auth)/signUp"} style={styles.red_colors}>SignUp</Link>
-            </Text>
-        </View>
-
-    )
+      <Text className="text-center mt-4 text-sm">
+        Don't have an account?{" "}
+        <Link href={"/(auth)/signUp"} className="text-[#F49B33] font-semibold">
+          Sign Up
+        </Link>
+      </Text>
+    </View>
+  );
 }
-
-
-const styles = StyleSheet.create({
-
-    body_container: {
-        flex: 2, // Takes the middle space
-        justifyContent: "center",
-        paddingHorizontal: 20,
-        paddingVertical: 60,
-    },
-    login_title: {
-        fontSize: 19,
-        fontWeight: "700",
-        marginBottom: 20,
-        textAlign: "center",
-    },
-    label: {
-        fontSize: 16,
-        fontWeight: "500",
-        marginBottom: 5,
-    },
-    input: {
-        borderWidth: 1,
-        borderColor: "#ccc",
-        borderRadius: 8,
-        padding: 10,
-        marginBottom: 15,
-    },
-    button_style: {
-        backgroundColor: "#F49B33",
-        borderRadius: 8,
-        paddingVertical: 12,
-        alignItems: "center",
-        marginTop: 10,
-        textAlign: "center",
-    },
-    button_text: {
-        color: "#FFF",
-        fontWeight: "700",
-        fontSize: 16,
-    },
-    login_text: {
-        textAlign: "center",
-        marginTop: 15,
-        fontSize: 14,
-    },
-    red_colors: {
-        color: "#F49B33",
-        fontWeight: 700,
-    },
-})
