@@ -27,26 +27,28 @@ const AddRestaurantForm = () => {
         return;
       }
     }
-  
+
     const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images, // Use updated "MediaType.Images"
+      // mediaTypes: ImagePicker.MediaTypeOptions.Images, // Use updated "MediaType.Images"
       allowsEditing: true,
       quality: 1,
     });
-  
+
     if (!result.canceled) {
       const selectedAsset = result.assets[0]; // Ensure this is defined
       setLocalImage(selectedAsset.uri); // Set the selected image's URI
       handleImageUpload(selectedAsset.uri); // Pass URI to upload handler
     }
   };
-  
+
 
   const handleImageUpload = async (imageUri: string) => {
     const formData = new FormData();
 
     formData.append("image", {
       uri: imageUri,
+      name: 'restaurant.jpg',
+      type: 'image/jpeg',
     } as any);
 
     try {

@@ -1,4 +1,4 @@
-import { View, Text, StatusBar, ActivityIndicator, TextInput, ScrollView, Keyboard, Image } from 'react-native';
+import { View, Text, StatusBar, ActivityIndicator, TextInput, ScrollView, Keyboard, Image, ScrollViewBase } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import HomeHeader from '@/src/components/HomeHeader';

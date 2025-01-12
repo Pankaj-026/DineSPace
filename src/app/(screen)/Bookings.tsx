@@ -26,7 +26,7 @@ const BookingScreen = () => {
 
     <>
       {/* Header */}
-      <DineSpace_Header route="/RestuarantDetailsScreen" />
+      <DineSpace_Header route="/RestuarantDetailsScreen" name={"Bookings"}/>
 
       {/* Main */}
       <View className="flex-1 bg-gray-100 p-4">
