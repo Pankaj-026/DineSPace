@@ -16,7 +16,7 @@ const Home = () => {
     // Fetch restaurant data from backend
     useEffect(() => {
         setIsPending(true);
-        axios.get('http://192.168.0.101:5106/api/restaurants')
+        axios.get('http://192.168.0.100:5106/api/restaurants')
             .then(response => setRestaurants(response.data))
             .catch(error => console.error('Error fetching data:', error))
             .finally(() => setIsPending(false));
@@ -76,7 +76,7 @@ const Home = () => {
                             onChange={(e) => {
                                 setSearchText(e.nativeEvent.text);
                                 if (!e.nativeEvent.text) {
-                                    axios.get('http://localhost:5000/api/restaurants')
+                                    axios.get('http://192.168.0.100:5106/api/restaurants')
                                         .then(response => setRestaurants(response.data))
                                         .catch(error => console.error('Error fetching data:', error));
                                 } else {

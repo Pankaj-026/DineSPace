@@ -52,7 +52,7 @@ const AddRestaurantForm = () => {
     } as any);
 
     try {
-      const response = await axios.post("http://192.168.0.101:5106/api/img/upload", formData, {
+      const response = await axios.post("http://192.168.0.100:5106/api/img/upload", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -67,7 +67,7 @@ const AddRestaurantForm = () => {
 
   const handleSubmit = async () => {
     try {
-      await axios.post("http://192.168.0.101:5106/api/restaurants", formData);
+      await axios.post("http://192.168.0.100:5106/api/restaurants", formData);
       Alert.alert("Success", "Restaurant added successfully!");
       setFormData({
         name: "",
