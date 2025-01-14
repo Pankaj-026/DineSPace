@@ -9,36 +9,50 @@ import {
     Keyboard
 } from "react-native";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
-import { RouteProp } from "@react-navigation/native";
-import RouteParamList  from "@/src/components/RestuarantList";
 import { router } from "expo-router";
-
-// type RestaurantDetailsProps = {
-//     route: RouteProp<RouteParamList, "RestaurantDetails">;
-// };
-
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from "axios";
 
 export default function RestaurantDetailsScreen() {
 
-    // const { id, name, address, rating, discount, origin, imageUrl } = route.params;
-
-
     const [keyboardVisible, setKeyboardVisible] = useState(false)
+    const [resId, setResId] = useState<{ id: string }>({ id: "" });
+    // const [restaurantDetails, setRestaurantDetails] = useState<{ name: string }>({name: ""});
+    const [restaurantDetails, setRestaurantDetails] = useState<any>([])
 
     useEffect(() => {
-        const ifKeyboardVisible = Keyboard.addListener('keyboardDidShow', () => {
-            setKeyboardVisible(true)
-        })
-        const ifKeyboardNotVisible = Keyboard.addListener('keyboardDidHide', () => {
-            setKeyboardVisible(false)
-        })
-
+        const fetchUserData = async () => {
+          try {
+            const storedId = await AsyncStorage.getItem("SingleRestaurantDetails");
+            if (storedId) {
+              setResId({ id: storedId });
+            }
+          } catch (error) {
+            console.error("Error fetching stored restaurant ID:", error);
+          }
+        };
+      
+        fetchUserData();
+      
+        const keyboardShowListener = Keyboard.addListener('keyboardDidShow', () => setKeyboardVisible(true));
+        const keyboardHideListener = Keyboard.addListener('keyboardDidHide', () => setKeyboardVisible(false));
+      
         return () => {
-            ifKeyboardNotVisible.remove()
-            ifKeyboardVisible.remove()
+          keyboardShowListener.remove();
+          keyboardHideListener.remove();
+        };
+      }, []);
+      
+    
+
+    useEffect(() => {
+        if (resId.id) {
+            axios.get(`http://192.168.0.100:5106/api/restaurants/${resId.id}`)
+                .then(response => setRestaurantDetails(response.data))
+                .catch(error => console.error('Error fetching data:', error));
         }
-    }, [])
+    }, [resId]);
+    
 
     return (
         <View className="flex-1 bg-white">
@@ -51,10 +65,10 @@ export default function RestaurantDetailsScreen() {
                     </TouchableOpacity>
                     <View className="flex-1 mx-4">
                         <Text className="text-lg font-bold text-black">
-                            name
+                            {restaurantDetails.name}
                         </Text>
                         <Text className="text-sm text-gray-500">
-                            Marol, Mumbai
+                            {restaurantDetails?.address}
                         </Text>
                     </View>
                     <View className="flex-row space-x-4">
@@ -63,7 +77,7 @@ export default function RestaurantDetailsScreen() {
                             name="share-social-outline"
                             size={24}
                             color="black"
-                        />
+                            />
                     </View>
                 </View>
 
@@ -74,19 +88,20 @@ export default function RestaurantDetailsScreen() {
                             uri: "https://via.placeholder.com/300x200", // Replace with actual image
                         }}
                         className="w-full h-48 rounded-t-lg"
-                    />
+                        />
                     <View className="p-4">
                         <Text className="text-lg font-bold text-black">
-                            Cray Craft
+                        {restaurantDetails.name}
                         </Text>
                         <Text className="text-sm text-gray-500">
-                            5.7 km • Marol, Mumbai
+                        {restaurantDetails.address}
                         </Text>
                         <Text className="text-sm text-gray-500">
-                            Chinese, Asian | ₹1400 for two
+                        {restaurantDetails.origin}
+                            
                         </Text>
                         <View className="flex-row items-center justify-between mt-4">
-                            <View className="flex-row items-center space-x-2">
+                            <View className="flex-row items-center space-x-2 gap-2">
                                 <Text className="text-green-600 font-bold">
                                     Open
                                 </Text>
@@ -155,7 +170,7 @@ export default function RestaurantDetailsScreen() {
                     <Text className="text-lg font-bold text-black mb-2">
                         Amenities (3)
                     </Text>
-                    {["Parking available", "Free WiFi", "SwiggyPay accepted"].map(
+                    {["Parking available", "Free WiFi", "pay accepted"].map(
                         (amenity, index) => (
                             <View key={index} className="flex-row items-center mb-2">
                                 <Ionicons name="star" size={16} color="#FFD700" />
@@ -166,7 +181,7 @@ export default function RestaurantDetailsScreen() {
                 </View>
 
                 {/* Comments/Feedback Section */}
-                <View className="py-24 px-4 mb-4">
+                {/* <View className="py-24 px-4 mb-4">
                     <Text className="text-lg font-bold text-black mb-2">
                         Comments & Feedback
                     </Text>
@@ -183,7 +198,7 @@ export default function RestaurantDetailsScreen() {
                             Submit Feedback
                         </Text>
                     </TouchableOpacity>
-                </View>
+                </View> */}
             </ScrollView>
 
             {/* Sticky Footer Button */}

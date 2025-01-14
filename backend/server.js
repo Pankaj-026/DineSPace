@@ -4,6 +4,7 @@ const connectDB = require("./config/db");
 const userRoutes = require("./routes/userRoutes");
 const restaurantRoutes = require("./routes/restaurantRoutes");
 const uploadRoutes = require("./routes/uploadRoutes");
+const bookingRoutes = require("./routes/bookingRoutes");
 const cors = require("cors");
 const morgan = require("morgan");
 
@@ -11,8 +12,6 @@ dotenv.config();
 connectDB();
 
 const app = express();
-
-
 
 // Middleware
 app.use(express.json());
@@ -23,6 +22,7 @@ app.use(morgan("dev"));
 app.use("/app/users", userRoutes);
 app.use("/api/restaurants", restaurantRoutes);
 app.use("/api/img" , uploadRoutes);
+app.use("/api/bookings" , bookingRoutes);
 
 
 app.get("/", (req, res) => {

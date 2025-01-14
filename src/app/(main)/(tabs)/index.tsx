@@ -96,12 +96,19 @@ const Home = () => {
                 <View className="px-4 mt-4">
                     {restaurants.length > 0 ? (
                         restaurants.map((restaurant: any) => (
-                            <RestaurantCard key={restaurant._id} {...restaurant} />
+                            <RestaurantCard
+                                key={restaurant._id}
+                                id={restaurant._id}
+                                name={restaurant.name}
+                                address={restaurant.address}
+                                rating={restaurant.rating}
+                                discount={restaurant.discount}
+                                origin={restaurant.origin}
+                                imageUrl={restaurant.imageUrl}
+                            />
                         ))
                     ) : (
-                        <Text className="text-center text-gray-600 mt-10 font-medium">
-                            No Results Found
-                        </Text>
+                        <Text className="text-center text-gray-600 mt-10 font-medium">No Results Found</Text>
                     )}
                 </View>
             </ScrollView>

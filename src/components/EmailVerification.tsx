@@ -1,12 +1,12 @@
 import { View, Text, Button } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useSearchParams } from 'expo-router/build/hooks';
+import { useLocalSearchParams } from 'expo-router/build/hooks';
 import { router } from 'expo-router';
 
 const EmailVerification = () => {
   const [validUrl, setValidUrl] = useState(true);
-  const [searchParams] = useSearchParams();
+  const [searchParams]: any = useLocalSearchParams();
   const token = searchParams.toLocaleString('token');
 
   useEffect(() => {

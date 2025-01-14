@@ -4,7 +4,7 @@ import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 
 type DineSpaceHeaderProps = {
-  route: LinkProps["href"],
+  route: LinkProps<any>["href"],
   name: String,
 };
 
@@ -27,6 +27,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     paddingHorizontal: 15,
+    // marginTop: 40,
     backgroundColor: "white",
     zIndex: 99,
   },

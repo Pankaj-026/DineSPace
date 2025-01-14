@@ -3,59 +3,13 @@ import React, { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Link } from 'expo-router';
 import DineSPaceHeader from '@/src/components/DineSPace-header';
-// import { useRouter } from 'expo-router';
-// import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth'
-// import { auth, db } from "@/firebase.config"
-// import { doc, setDoc } from 'firebase/firestore';
 import { signup } from '@/services/api'
 
 const SignUp = ({ navigation }: any) => {
 
-  // const router = useRouter();
-  // const [email, setEmail] = useState("");
-  // const [password, setPassword] = useState("");
-  // const [emailSent, setEmailSent] = useState(false)
-  // const [userName, setUserName] = useState("");
 
   const [formData, setFormData] = useState({ name: "", email: "", password: "" });
   const [ErrorMessage, setErrorMessage] = useState("");
-
-  // const handleInputChange = (setter: any) => (value: any) => {
-  //   setter(value)
-  //   if (ErrorMessage) {
-  //     setErrorMessage("")
-  //   }
-  // }
-
-  // const handleSignup = () => {
-  //   createUserWithEmailAndPassword(auth, email, password)
-  //     .then((userCredential) => {
-  //       const user = userCredential.user;
-
-  //       setDoc(doc(db, 'users', user.uid), {
-  //         name: userName,
-  //         email: user.email,
-  //       }).catch((error) => {
-  //         console.error("Error writing to Firestore:", error);
-  //         setErrorMessage("Failed to save user data. Please try again.");
-  //       });
-
-  //       sendEmailVerification(user)
-  //         .then(() => {
-  //           alert(`A verification link has been sent to ${email}. Please verify your email.`);
-  //           router.push('/(auth)/login')
-  //         })
-  //         .catch((error) => setErrorMessage("Error sending verification email"))
-  //       setEmail('')
-  //       setPassword('')
-  //       setUserName('');
-
-  //     })
-  //     .catch((error) => {
-  //       const ErrorMsg = error.message;
-  //       setErrorMessage(ErrorMsg)
-  //     })
-  // }
 
   const handleChange = (key: any, value: any) => {
     setFormData({ ...formData, [key]: value });
