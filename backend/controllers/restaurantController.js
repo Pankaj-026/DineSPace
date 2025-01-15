@@ -12,15 +12,54 @@ exports.getAllRestaurants = async (req, res) => {
 
 // Add new restaurant
 exports.addRestaurant = async (req, res) => {
-    const { name, address, rating, discount, origin, imageUrl } = req.body;
+    const { 
+        name, 
+        address, 
+        cuisine, 
+        timings, 
+        popularDishes, 
+        rating, 
+        googleRating, 
+        discount, 
+        origin, 
+        imageUrl, 
+        moreImages, 
+        menuImages, 
+        amenities, 
+        location, 
+        restaurantOwnerGmail, 
+        contactNumber, 
+        description 
+    } = req.body;
+
     try {
-        const newRestaurant = new Restaurant({ name, address, rating, discount, origin, imageUrl });
+        const newRestaurant = new Restaurant({
+            name,
+            address,
+            cuisine,
+            timings,
+            popularDishes,
+            rating,
+            googleRating,
+            discount,
+            origin,
+            imageUrl,
+            moreImages,
+            menuImages,
+            amenities,
+            location,
+            restaurantOwnerGmail,
+            contactNumber,
+            description
+        });
+
         await newRestaurant.save();
         res.status(201).json(newRestaurant);
     } catch (error) {
         res.status(500).json({ error: 'Error adding restaurant' });
     }
 };
+
 
 exports.getRestaurantById = async (req, res) => {
     const { id } = req.params;
