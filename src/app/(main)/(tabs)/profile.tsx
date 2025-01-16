@@ -7,7 +7,7 @@ import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const Profile = () => {
-  const [userData, setUserData] = useState<{ name: string; email: string }>({ name: "", email: "" });
+  const [userData, setUserData] = useState<{ id: String, name: string; email: string }>({ id: "", name: "", email: "" });
 
   // Fetch user data on component mount
   useEffect(() => {
@@ -31,11 +31,12 @@ const Profile = () => {
         {/* Profile Section */}
         <View className="bg-white p-6 m-4 rounded-lg shadow items-center">
           <Image
-            source={{ uri: 'https://via.placeholder.com/150' }}
+            source={{ uri: 'https://res.cloudinary.com/drwy0czge/image/upload/v1737036087/vz9pikjzarahf3sxppkj.png' }}
             className="w-24 h-24 rounded-full mb-4"
           />
           <Text className="text-lg font-bold">{userData.name || "User Name"}</Text>
           <Text className="text-sm text-gray-500">{userData.email || "user@example.com"}</Text>
+          {/* <Text className="text-sm text-gray-500">{userData.id || "user@example.com"}</Text> */}
           <Text className="text-sm text-gray-500">+91 1234567890</Text>
         </View>
 

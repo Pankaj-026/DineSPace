@@ -41,12 +41,18 @@ const bookingSchema = new mongoose.Schema(
       },
     },
     numberOfGuests: {
-        type: Number,
-        required: true,
-        min: [1, "Number of guests must be at least 1."],
-        max: [10, "Number of guests can be till 10."],
+      type: Number,
+      min: [1, "Number of guests must be at least 1."],
+    },
+    isLargeGroup: {
+      type: Boolean,
+      default: false,
     },
     phoneNumber: {
+      type: String,
+      required: true,
+    },
+    bookingType: {
       type: String,
       required: true,
     },

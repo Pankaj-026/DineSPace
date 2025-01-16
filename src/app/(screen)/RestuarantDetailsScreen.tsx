@@ -21,7 +21,7 @@ export default function RestaurantDetailsScreen() {
     const [restaurantDetails, setRestaurantDetails] = useState<any>([]);
 
     useEffect(() => {
-        const fetchUserData = async () => {
+        const fetchRestuarantData = async () => {
             try {
                 const storedId = await AsyncStorage.getItem("SingleRestaurantDetails");
                 if (storedId) {
@@ -32,7 +32,7 @@ export default function RestaurantDetailsScreen() {
             }
         };
 
-        fetchUserData();
+        fetchRestuarantData();
 
         const keyboardShowListener = Keyboard.addListener(
             "keyboardDidShow",
@@ -55,7 +55,7 @@ export default function RestaurantDetailsScreen() {
                 .get(`http://192.168.0.101:5106/api/restaurants/${resId.id}`)
                 .then((response) => {
                     setRestaurantDetails(response.data);
-                    // console.log(response.data);
+                    console.log(response.data);
                     // console.log(resId.id);
                 })
                 .catch((error) => console.error("Error fetching data:", error));
@@ -121,13 +121,13 @@ export default function RestaurantDetailsScreen() {
                                 <Text className="text-green-600 font-bold">
                                     Open
                                 </Text>
-                                <Text className="text-gray-500">{restaurantDetails.timings?.open}</Text>
+                                <Text className="text-gray-500">{restaurantDetails.opens}: 00 </Text>
                             </View>
                             <View className="flex-row items-center space-x-2 gap-2">
                                 <Text className="text-red-600 font-bold">
                                     Close
                                 </Text>
-                                <Text className="text-gray-500">{restaurantDetails.timings?.close}</Text>
+                                <Text className="text-gray-500">{restaurantDetails.closes}: 00 </Text>
                             </View>
                             <View className="flex-row space-x-4">
                                 {/* <MaterialIcons
@@ -140,12 +140,10 @@ export default function RestaurantDetailsScreen() {
                         </View>
                     </View>
                     <View className="absolute top-4 right-4 bg-green-100 px-2 py-1 rounded-md">
-                        <Text className="text-green-600 font-bold text-lg">
-                            {restaurantDetails.googleRating}
+                        <Text className="text-green-500 font-bold text-sm">
+                            {restaurantDetails.googleRating} ⭐
                         </Text>
-                        <Text className="text-xs text-gray-500">
-                            Google Ratings
-                        </Text>
+
                     </View>
                 </View>
 
@@ -223,8 +221,8 @@ export default function RestaurantDetailsScreen() {
                     </View>
                 </View>
 
-                 {/* Location */}
-                 <View className="px-4 mb-4">
+                {/* Location */}
+                <View className="px-4 mb-4">
                     <Text className="text-lg font-bold text-black mb-2">Location</Text>
                     <Text className="ml-2 text-gray-600">
                         {restaurantDetails.location}
@@ -250,7 +248,14 @@ export default function RestaurantDetailsScreen() {
                 <View className="absolute bottom-0 left-0 right-0 p-4 bg-white border-t border-gray-300 shadow-md">
                     <TouchableOpacity
                         className="bg-[#F49B33] py-3 rounded-md"
-                        onPress={() => router.push("/(screen)/Bookings")}
+                        onPress={async () => {
+                            try {
+                                await AsyncStorage.setItem("BookingDetails", resId.id);
+                                router.push(`/(screen)/Bookings`);
+                            } catch (error) {
+                                console.error("Error saving restaurant ID:", error);
+                            }
+                        }}
                     >
                         <Text className="text-center text-white font-bold text-lg">
                             Book a Table

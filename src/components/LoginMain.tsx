@@ -7,7 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 export default function LoginMain() {
   
   const router = useRouter();
-  const [formData, setFormData] = useState({ email: "", password: "" });
+  const [formData, setFormData] = useState({ id:"", email: "", password: "" });
   const [ErrorMessage, setErrorMessage] = useState("");
 
   const handleChange = (key: any, value: any) => {
@@ -20,10 +20,11 @@ const handleSubmit = async () => {
     try {
         const response = await login(formData);
         Alert.alert("Success", "Login Successful!");
-        const { name, email } = response.data.user;
+        const { id, name, email } = response.data.user;
+        console.log(response.data)
         
         // Store user data securely
-        await AsyncStorage.setItem("userData", JSON.stringify({ name, email }));
+        await AsyncStorage.setItem("userData", JSON.stringify({ id, name, email }));
 
         router.push('/(main)/(tabs)');
     } catch (error: any) {

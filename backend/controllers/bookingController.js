@@ -11,7 +11,9 @@ exports.createBooking = async (req, res) => {
       bookingDate,
       bookingTime,
       numberOfGuests,
+      isLargeGroup,
       phoneNumber,
+      bookingType,
       specialRequests,
     } = req.body;
 
@@ -52,7 +54,9 @@ exports.createBooking = async (req, res) => {
       bookingDate,
       bookingTime,
       numberOfGuests,
+      isLargeGroup,
       phoneNumber,
+      bookingType,
       specialRequests,
     });
 
