@@ -1,6 +1,6 @@
-import { signOut } from 'firebase/auth';
+// import { signOut } from 'firebase/auth';
 import { useRouter } from 'expo-router';
-import { auth } from '@/firebase.config';
+// import { auth } from '@/firebase.config';
 import { TouchableOpacity, Text, StyleSheet, ActivityIndicator, View } from 'react-native';
 import React, { useState } from 'react';
 
@@ -14,7 +14,7 @@ const LogoutButton = () => {
         setErrorMessage("");
 
         try {
-            await signOut(auth);
+            // await signOut(auth);
             router.replace('/(auth)/login'); 
         } catch (error: any) {
             console.error('Error during logout:', error.message);

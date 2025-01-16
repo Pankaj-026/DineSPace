@@ -13,6 +13,7 @@ import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function RestaurantDetailsScreen() {
     const [keyboardVisible, setKeyboardVisible] = useState(false);
@@ -51,7 +52,7 @@ export default function RestaurantDetailsScreen() {
     useEffect(() => {
         if (resId.id) {
             axios
-                .get(`http://192.168.0.100:5106/api/restaurants/${resId.id}`)
+                .get(`http://192.168.0.101:5106/api/restaurants/${resId.id}`)
                 .then((response) => {
                     setRestaurantDetails(response.data);
                     // console.log(response.data);
@@ -62,7 +63,7 @@ export default function RestaurantDetailsScreen() {
     }, [resId]);
 
     return (
-        <View className="flex-1 bg-white">
+        <SafeAreaView className="flex-1 bg-white">
             <ScrollView className="flex-1">
                 {/* Header */}
                 <View className="flex-row items-center justify-between p-4">
@@ -222,6 +223,14 @@ export default function RestaurantDetailsScreen() {
                     </View>
                 </View>
 
+                 {/* Location */}
+                 <View className="px-4 mb-4">
+                    <Text className="text-lg font-bold text-black mb-2">Location</Text>
+                    <Text className="ml-2 text-gray-600">
+                        {restaurantDetails.location}
+                    </Text>
+                </View>
+
                 {/* Amenities Section */}
                 <View className="px-4 mb-24">
                     <Text className="text-lg font-bold text-black mb-2">
@@ -249,6 +258,6 @@ export default function RestaurantDetailsScreen() {
                     </TouchableOpacity>
                 </View>
             )}
-        </View>
+        </SafeAreaView>
     );
 }

@@ -77,7 +77,7 @@ const AddRestaurantForm = () => {
     } as any);
 
     try {
-      const response = await axios.post("http://192.168.0.100:5106/api/img/upload", imageFormData, {
+      const response = await axios.post("http://192.168.0.101:5106/api/img/upload", imageFormData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
@@ -101,7 +101,7 @@ const AddRestaurantForm = () => {
         amenities: formData.amenities.split(","),
       };
 
-      await axios.post("http://192.168.0.100:5106/api/restaurants", processedData);
+      await axios.post("http://192.168.0.101:5106/api/restaurants", processedData);
       Alert.alert("Success", "Restaurant added successfully!");
       setFormData({
         name: "",

@@ -37,7 +37,6 @@ const RestaurantCard = ({ id, name, address, rating, discount, origin, imageUrl 
         <Text className="text-sm text-gray-500 mt-1">{origin}</Text>
         <View className="flex-row justify-between items-center mt-3">
           <Text className="text-sm font-semibold text-green-600">⭐ {rating}</Text>
-          <Text className="text-sm font-semibold text-green-600">⭐ {id}</Text>
           <Text className="text-sm font-semibold text-orange-600">Flat {discount}% OFF</Text>
         </View>
       </View>

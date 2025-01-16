@@ -2,6 +2,7 @@ import DineSpace_Header from '@/src/components/DineSPace-header';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 
 const BookingScreen = () => {
@@ -25,6 +26,7 @@ const BookingScreen = () => {
   return (
 
     <>
+    <SafeAreaView></SafeAreaView>
       {/* Header */}
       <DineSpace_Header route="/RestuarantDetailsScreen" name={"Bookings"}/>
 

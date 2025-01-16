@@ -4,6 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import LogoutButton from '@/src/components/Logout';
 import DineSpace_Header from '@/src/components/DineSPace-header';
 import { router } from 'expo-router';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const Profile = () => {
   const [userData, setUserData] = useState<{ name: string; email: string }>({ name: "", email: "" });
@@ -22,39 +23,42 @@ const Profile = () => {
 
   return (
     <ScrollView className="flex-1 bg-gray-100">
-      {/* Header */}
-      <DineSpace_Header route={'/(main)/(tabs)'} name="Profile" />
+      <SafeAreaView>
 
-      {/* Profile Section */}
-      <View className="bg-white p-6 m-4 rounded-lg shadow items-center">
-        <Image
-          source={{ uri: 'https://via.placeholder.com/150' }}
-          className="w-24 h-24 rounded-full mb-4"
-        />
-        <Text className="text-lg font-bold">{userData.name || "User Name"}</Text>
-        <Text className="text-sm text-gray-500">{userData.email || "user@example.com"}</Text>
-        <Text className="text-sm text-gray-500">+91 1234567890</Text>
-      </View>
+        {/* Header */}
+        <DineSpace_Header route={'/(main)/(tabs)'} name="Profile" />
 
-      {/* Action Buttons */}
-      <View className="bg-white m-4 rounded-lg shadow p-4">
-        <TouchableOpacity className="flex-row items-center py-4 border-b border-gray-200">
-          <Text className="text-base font-bold text-black flex-1">Edit Profile</Text>
-          <Text className="text-gray-400">{'>'}</Text>
-        </TouchableOpacity>
+        {/* Profile Section */}
+        <View className="bg-white p-6 m-4 rounded-lg shadow items-center">
+          <Image
+            source={{ uri: 'https://via.placeholder.com/150' }}
+            className="w-24 h-24 rounded-full mb-4"
+          />
+          <Text className="text-lg font-bold">{userData.name || "User Name"}</Text>
+          <Text className="text-sm text-gray-500">{userData.email || "user@example.com"}</Text>
+          <Text className="text-sm text-gray-500">+91 1234567890</Text>
+        </View>
 
-        <TouchableOpacity className="flex-row items-center py-4 border-b border-gray-200" onPress={() => router.push("/(admin)/admin")}>
-          <Text className="text-base font-bold text-black flex-1">View Bookings</Text>
-          <Text className="text-gray-400">{'>'}</Text>
-        </TouchableOpacity>
+        {/* Action Buttons */}
+        <View className="bg-white m-4 rounded-lg shadow p-4">
+          <TouchableOpacity className="flex-row items-center py-4 border-b border-gray-200">
+            <Text className="text-base font-bold text-black flex-1">Edit Profile</Text>
+            <Text className="text-gray-400">{'>'}</Text>
+          </TouchableOpacity>
 
-        <TouchableOpacity className="flex-row items-center py-4 border-b border-gray-200">
-          <Text className="text-base font-bold text-black flex-1">Payment Methods</Text>
-          <Text className="text-gray-400">{'>'}</Text>
-        </TouchableOpacity>
+          <TouchableOpacity className="flex-row items-center py-4 border-b border-gray-200" onPress={() => router.push("/(admin)/admin")}>
+            <Text className="text-base font-bold text-black flex-1">View Bookings</Text>
+            <Text className="text-gray-400">{'>'}</Text>
+          </TouchableOpacity>
 
-        <LogoutButton />
-      </View>
+          <TouchableOpacity className="flex-row items-center py-4 border-b border-gray-200">
+            <Text className="text-base font-bold text-black flex-1">Payment Methods</Text>
+            <Text className="text-gray-400">{'>'}</Text>
+          </TouchableOpacity>
+
+          <LogoutButton />
+        </View>
+      </SafeAreaView>
     </ScrollView>
   );
 };
