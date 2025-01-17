@@ -37,7 +37,7 @@ const BookingScreen = () => {
   useEffect(() => {
     if (resId) {
       axios
-        .get(`http://192.168.0.101:5106/api/restaurants/${resId}`)
+        .get(`http://192.168.0.102:5106/api/restaurants/${resId}`)
         .then((response) => {
           setRestaurantDetails(response.data);
         })
@@ -75,16 +75,19 @@ const BookingScreen = () => {
 
   const validateAndProceed = async () => {
     if (!time || (!isLargeGroup && !partySize) || (isLargeGroup && !largeGroupSize) || !phoneNumber) {
+      console.log("lllllllllll");
       Alert.alert('Error', 'Please fill out all required fields.');
       return;
     }
-
+    
     if (isLargeGroup && parseInt(largeGroupSize) <= 10) {
+      console.log("lllllllllllff");
       Alert.alert('Error', 'Large group size must be more than 10.');
       return;
     }
-
+    
     if (!/^\d{10}$/.test(phoneNumber)) {
+      console.log("lllllllllllffffrde");
       Alert.alert('Error', 'Please enter a valid 10-digit phone number.');
       return;
     }
@@ -94,7 +97,11 @@ const BookingScreen = () => {
       const userData = await AsyncStorage.getItem("userData");
       const user = userData ? JSON.parse(userData) : null;
 
+      console.log(user);
+      console.log(user.id);
+      console.log(user.name);
       if (user) {
+        
         const bookingDetails = {
           userId: user.id,
           userName: user.name,
@@ -109,7 +116,7 @@ const BookingScreen = () => {
           specialRequests: specialRequests,
         };
 
-        const response = await fetch('http://192.168.0.101:5106/api/bookings/book', {
+        const response = await fetch('http://192.168.0.102:5106/api/bookings/book', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -119,12 +126,19 @@ const BookingScreen = () => {
 
         const data = await response.json();
         if (response.ok) {
+          console.log("AAAAAAAAAAAAAAAAAAAA");
           Alert.alert('Booking Successful', data.message);
+          await AsyncStorage.setItem("BookingDetails", resId);
           router.push("/(main)/(tabs)/order")
         } else {
+          console.log("BBBBBBBBBBBB", data.message);
+          console.log(data);
+          console.log(response);
+          
           Alert.alert('Error', data.message || 'Failed to create booking');
         }
       } else {
+        console.log("CCCCCCCCCCCCCCCCCCCcc");
         Alert.alert('Error', 'User not found. Please log in again.');
       }
     } catch (error) {
@@ -204,6 +218,7 @@ const BookingScreen = () => {
                 display="default"
                 minimumDate={new Date()}
                 onChange={handleDateChange}
+                accentColor='#F49B33'
               />
             )}
           </View>
@@ -252,9 +267,8 @@ const BookingScreen = () => {
         </View>
 
         {/* Proceed Button */}
-        <TouchableOpacity className="bg-[#F49B33] p-4 rounded-lg" onPress={() => {
-          validateAndProceed
-        }}>
+        <TouchableOpacity className="bg-[#F49B33] p-4 rounded-lg" 
+          onPress={validateAndProceed}>
           <Text className="text-center text-lg text-white">Proceed</Text>
         </TouchableOpacity>
       </ScrollView>

@@ -36,7 +36,7 @@ const Profile = () => {
           />
           <Text className="text-lg font-bold">{userData.name || "User Name"}</Text>
           <Text className="text-sm text-gray-500">{userData.email || "user@example.com"}</Text>
-          {/* <Text className="text-sm text-gray-500">{userData.id || "user@example.com"}</Text> */}
+          <Text className="text-sm text-gray-500">{userData.id || "user@example.com"}</Text>
           <Text className="text-sm text-gray-500">+91 1234567890</Text>
         </View>
 

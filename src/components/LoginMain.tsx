@@ -7,7 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 export default function LoginMain() {
   
   const router = useRouter();
-  const [formData, setFormData] = useState({ id:"", email: "", password: "" });
+  const [formData, setFormData] = useState({ id:"", email: "", password: "", isAdmin: Boolean, isOwner: Boolean });
   const [ErrorMessage, setErrorMessage] = useState("");
 
   const handleChange = (key: any, value: any) => {
@@ -20,13 +20,19 @@ const handleSubmit = async () => {
     try {
         const response = await login(formData);
         Alert.alert("Success", "Login Successful!");
-        const { id, name, email } = response.data.user;
+        const { id, name, email, admin, owner } = response.data.user;
         console.log(response.data)
         
         // Store user data securely
-        await AsyncStorage.setItem("userData", JSON.stringify({ id, name, email }));
+        await AsyncStorage.setItem("userData", JSON.stringify({ id, name, email, admin, owner }));
 
-        router.push('/(main)/(tabs)');
+        if(admin){
+          router.push('/(admin)/admin');
+        }else if(owner){
+          router.push('/(Restuarants)/owner');
+        }else{
+          router.push('/(main)/(tabs)');
+        }
     } catch (error: any) {
         setErrorMessage(error.response?.data?.message || "An error occurred");
         Alert.alert("Error", error.response?.data?.message || "An error occurred");

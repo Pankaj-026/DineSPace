@@ -52,10 +52,10 @@ export default function RestaurantDetailsScreen() {
     useEffect(() => {
         if (resId.id) {
             axios
-                .get(`http://192.168.0.101:5106/api/restaurants/${resId.id}`)
+                .get(`http://192.168.0.102:5106/api/restaurants/${resId.id}`)
                 .then((response) => {
                     setRestaurantDetails(response.data);
-                    console.log(response.data);
+                    // console.log(response.data);
                     // console.log(resId.id);
                 })
                 .catch((error) => console.error("Error fetching data:", error));

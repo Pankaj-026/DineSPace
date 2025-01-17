@@ -16,9 +16,9 @@ const signup = async (req, res) => {
 
     const user = new User({ name, email, password });
     await user.save();
-    
-    console.log(req.body)
-    console.log(req.params)
+
+    console.log(req.body);
+    console.log(req.params);
 
     // Generate a verification token
     const verificationToken = crypto.randomBytes(32).toString("hex");
@@ -38,7 +38,7 @@ const signup = async (req, res) => {
 
     res.status(201).json({
       message:
-        "User registered successfully. Check your email to verify your account.",
+        "You have registered successfully. Check your email to verify your account.",
     });
   } catch (error) {
     console.error("Error during signup:", error);
@@ -47,10 +47,10 @@ const signup = async (req, res) => {
 };
 
 const login = async (req, res) => {
-  const { email, password } = req.body;
-  
-  console.log(req.body)
-  console.log(req.params)
+  const { email, password, isAdmin, isOwner } = req.body;
+
+  console.log(req.body);
+  console.log(req.params);
 
   try {
     // Check if the user exists
@@ -58,6 +58,8 @@ const login = async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
+    console.log(user);
+    
 
     // Check if the user's email is verified
     if (!user.verified) {
@@ -78,14 +80,19 @@ const login = async (req, res) => {
     });
     res.status(200).json({
       token,
-      user: { id: user._id, name: user.name, email: user.email },
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        admin: user.isAdmin,
+        owner: user.isOwner,
+      },
     });
   } catch (error) {
     console.error("Error during login:", error);
     res.status(500).json({ message: "Server error", error });
   }
 };
-
 
 const verifyEmail = async (req, res) => {
   const { token } = req.params;
@@ -106,12 +113,13 @@ const verifyEmail = async (req, res) => {
     await verificationToken.deleteOne();
 
     // Redirect user to frontend success page after verification
-    res.redirect(`http://localhost:8081/app/users/email-verification-success?token=${token}`);
+    res.redirect(
+      `http://localhost:8081/app/users/email-verification-success?token=${token}`
+    );
   } catch (error) {
     console.error("Error verifying email:", error);
     res.status(500).json({ message: "Server error", error });
   }
 };
-
 
 module.exports = { signup, verifyEmail, login };

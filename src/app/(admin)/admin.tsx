@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, TextInput, Button, Text, Image, ScrollView, Alert, TouchableOpacity, Platform } from "react-native";
+import { View, TextInput, Button, Text, Image, ScrollView, Alert, TouchableOpacity, Platform, SafeAreaView } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import axios from "axios";
 
@@ -77,7 +77,7 @@ const AddRestaurantForm = () => {
     } as any);
 
     try {
-      const response = await axios.post("http://192.168.0.101:5106/api/img/upload", imageFormData, {
+      const response = await axios.post("http://192.168.0.102:5106/api/img/upload", imageFormData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
@@ -101,7 +101,7 @@ const AddRestaurantForm = () => {
         amenities: formData.amenities.split(","),
       };
 
-      await axios.post("http://192.168.0.101:5106/api/restaurants", processedData);
+      await axios.post("http://192.168.0.102:5106/api/restaurants", processedData);
       Alert.alert("Success", "Restaurant added successfully!");
       setFormData({
         name: "",
@@ -130,8 +130,9 @@ const AddRestaurantForm = () => {
   };
 
   return (
-    <ScrollView className="p-4 bg-gray-100">
-      <Text className="text-2xl font-bold text-center mb-4">Add Restaurant Details</Text>
+    <ScrollView className="p-4 bg-gray-100 ">
+      <SafeAreaView></SafeAreaView>
+      <Text className="text-2xl font-bold text-center mb-8">Add Restaurant Details</Text>
 
       {/* Text Inputs */}
       <TextInput className="border rounded-md px-3 py-2 mb-3" placeholder="Name" value={formData.name} onChangeText={(value) => handleChange("name", value)} />

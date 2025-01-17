@@ -79,22 +79,23 @@ exports.createBooking = async (req, res) => {
 // Get all bookings
 exports.getAllBookings = async (req, res) => {
   try {
-    // Fetch all bookings with populated user and restaurant details
-    const bookings = await Booking.find()
-      .populate("userId", "name email") // Populate user details
-      .populate("restaurantId", "name address"); // Populate restaurant details
+    const { userId } = req.query;
 
-    // Log the retrieved bookings for debugging
+    let query = {};
+    if (userId) {
+      query.userId = userId;
+    }
+
+    const bookings = await Booking.find(query)
+      .populate("userId", "name email")
+      .populate("restaurantId", "name address");
+
     if (!bookings.length) {
-      console.log("No bookings found.");
       return res.status(404).json({ message: "No bookings available." });
     }
 
-    console.log("Bookings retrieved successfully:", bookings);
     res.status(200).json({ bookings });
   } catch (error) {
-    console.error("Error fetching bookings:", error);
-
     res.status(500).json({
       message: "Failed to fetch bookings",
       error: error.message,

@@ -12,11 +12,9 @@ const bookingSchema = new mongoose.Schema(
     restaurantId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Restaurant",
-      required: true,
     },
     restaurantName: {
       type: String,
-      required: true,
     },
     bookingDate: {
       type: String,
@@ -61,6 +59,10 @@ const bookingSchema = new mongoose.Schema(
       maxlength: 500,
       default: "",
     },
+    Status: {
+      type: String,
+      default: "Pending",
+    }
   },
   {
     timestamps: true,

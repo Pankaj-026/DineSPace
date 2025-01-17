@@ -19,7 +19,7 @@ app.use(cors());
 app.use(morgan("dev"));
 
 // Routes
-app.use("/app/users", userRoutes);
+app.use("/api/users", userRoutes);
 app.use("/api/restaurants", restaurantRoutes);
 app.use("/api/img" , uploadRoutes);
 app.use("/api/bookings" , bookingRoutes);
