@@ -6,6 +6,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import DineSpace_Header from '@/src/components/DineSPace-header';
 import axios from 'axios';
 import { router } from 'expo-router';
+import url from "@/src/constants/axiosUrl";
+
 
 const BookingScreen = () => {
   const [selectedOption, setSelectedOption] = useState('Pre-Book');
@@ -37,7 +39,7 @@ const BookingScreen = () => {
   useEffect(() => {
     if (resId) {
       axios
-        .get(`http://192.168.0.102:5106/api/restaurants/${resId}`)
+        .get(`${url}/api/restaurants/${resId}`)
         .then((response) => {
           setRestaurantDetails(response.data);
         })
@@ -116,7 +118,7 @@ const BookingScreen = () => {
           specialRequests: specialRequests,
         };
 
-        const response = await fetch('http://192.168.0.102:5106/api/bookings/book', {
+        const response = await fetch(`${url}/api/bookings/book`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

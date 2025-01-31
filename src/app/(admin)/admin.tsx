@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { View, TextInput, Button, Text, Image, ScrollView, Alert, TouchableOpacity, Platform, SafeAreaView } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import axios from "axios";
+import url from "@/src/constants/axiosUrl";
 
 const AddRestaurantForm = () => {
   const [formData, setFormData] = useState({
@@ -77,7 +78,7 @@ const AddRestaurantForm = () => {
     } as any);
 
     try {
-      const response = await axios.post("http://192.168.0.102:5106/api/img/upload", imageFormData, {
+      const response = await axios.post(`${url}/api/img/upload`, imageFormData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
@@ -101,7 +102,7 @@ const AddRestaurantForm = () => {
         amenities: formData.amenities.split(","),
       };
 
-      await axios.post("http://192.168.0.102:5106/api/restaurants", processedData);
+      await axios.post(`${url}/api/restaurants`, processedData);
       Alert.alert("Success", "Restaurant added successfully!");
       setFormData({
         name: "",

@@ -14,6 +14,7 @@ import { router } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { SafeAreaView } from "react-native-safe-area-context";
+import url from "@/src/constants/axiosUrl";
 
 export default function RestaurantDetailsScreen() {
     const [keyboardVisible, setKeyboardVisible] = useState(false);
@@ -52,7 +53,7 @@ export default function RestaurantDetailsScreen() {
     useEffect(() => {
         if (resId.id) {
             axios
-                .get(`http://192.168.0.102:5106/api/restaurants/${resId.id}`)
+                .get(`${url}/api/restaurants/${resId.id}`)
                 .then((response) => {
                     setRestaurantDetails(response.data);
                     // console.log(response.data);

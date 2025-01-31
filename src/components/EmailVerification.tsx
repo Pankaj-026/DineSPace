@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useLocalSearchParams } from 'expo-router/build/hooks';
 import { router } from 'expo-router';
+import urlz from "@/src/constants/axiosUrl";
 
 const EmailVerification = () => {
   const [validUrl, setValidUrl] = useState(true);
@@ -12,7 +13,7 @@ const EmailVerification = () => {
   useEffect(() => {
     const verifyEmailUrl = async () => {
       try {
-        const url = `http://192.168.0.100:5106/app/users/verify-email/${token}`;
+        const url = `${urlz}/api/users/verify-email/${token}`;
         const { data } = await axios.get(url);
         console.log(data);
         setValidUrl(true);

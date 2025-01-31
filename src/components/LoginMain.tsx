@@ -7,7 +7,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 export default function LoginMain() {
   
   const router = useRouter();
-  const [formData, setFormData] = useState({ id:"", email: "", password: "", isAdmin: Boolean, isOwner: Boolean });
+  const [formData, setFormData] = useState({ id:"", email: "", password: "", isAdmin
+    : Boolean, isOwner: Boolean });
   const [ErrorMessage, setErrorMessage] = useState("");
 
   const handleChange = (key: any, value: any) => {

@@ -6,6 +6,7 @@ import RestaurantCard from '@/src/components/RestuarantCard';
 import RestuarantImg from '@/src/constants/imagePath';
 import { FontAwesome, MaterialIcons } from '@expo/vector-icons';
 import axios from 'axios';  // Axios for API calls
+import url from "@/src/constants/axiosUrl";
 
 const Home = () => {
     const [isPending, setIsPending] = useState(false);
@@ -16,7 +17,7 @@ const Home = () => {
     // Fetch restaurant data from backend
     useEffect(() => {
         setIsPending(true);
-        axios.get(`http://192.168.0.102:5106/api/restaurants`)
+        axios.get(`${url}/api/restaurants`)
             .then(response => setRestaurants(response.data))
             .catch(error => console.error('Error fetching data:', error))
             .finally(() => setIsPending(false));
@@ -76,7 +77,7 @@ const Home = () => {
                             onChange={(e) => {
                                 setSearchText(e.nativeEvent.text);
                                 if (!e.nativeEvent.text) {
-                                    axios.get('http://192.168.0.100:5106/api/restaurants')
+                                    axios.get(`${url}/api/restaurants`)
                                         .then(response => setRestaurants(response.data))
                                         .catch(error => console.error('Error fetching data:', error));
                                 } else {

@@ -15,6 +15,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import DateTimePicker from '@react-native-community/datetimepicker';
+import url from "@/src/constants/axiosUrl";
 
 const YourActivityScreen = () => {
   const [activeTab, setActiveTab] = useState("Bookings");
@@ -42,7 +43,7 @@ const YourActivityScreen = () => {
         // Fetch bookings
         setLoading(true);
         const bookingsResponse = await axios.get(
-          `http://192.168.0.102:5106/api/bookings/book?userId=${userData.id}`
+          `${url}/api/bookings/book?userId=${userData.id}`
         );
         const fetchedBookings = bookingsResponse.data.bookings;
 
@@ -53,7 +54,7 @@ const YourActivityScreen = () => {
               console.log("sddwsdd", booking.restaurantId?._id);
 
               const restaurantResponse = await axios.get(
-                `http://192.168.0.102:5106/api/restaurants/${booking.restaurantId?._id}`
+                `${url}/api/restaurants/${booking.restaurantId?._id}`
               );
               return {
                 ...booking,
@@ -87,7 +88,7 @@ const YourActivityScreen = () => {
   const handleCancelBooking = async (bookingId) => {
     try {
       const response = await axios.delete(
-        `http://192.168.0.102:5106/api/bookings/book/${bookingId}`
+        `${url}/api/bookings/book/${bookingId}`
       );
       Alert.alert("Success", response.data.message);
       // Update UI by removing the canceled booking
@@ -120,13 +121,13 @@ const YourActivityScreen = () => {
   const handleSubmitModification = async () => {
     try {
       const response = await axios.put(
-        `http://192.168.0.102:5106/api/bookings/book/${selectedBooking._id}`,
+        `${url}/api/bookings/book/${selectedBooking._id}`,
         selectedBooking
       );
       const updatedBooking = response.data.booking;
 
       const restaurantResponse = await axios.get(
-        `http://192.168.0.102:5106/api/restaurants/${updatedBooking.restaurantId}`
+        `${url}/api/restaurants/${updatedBooking.restaurantId}`
       );
 
       setBookings((prev) =>
