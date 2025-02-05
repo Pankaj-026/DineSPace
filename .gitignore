@@ -20,6 +20,7 @@ package-lock.json
 *.mobileprovision
 
 # Metro
+.env
 .metro-health-check*
 
 # debug
