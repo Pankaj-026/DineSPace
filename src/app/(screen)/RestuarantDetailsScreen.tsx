@@ -122,13 +122,13 @@ export default function RestaurantDetailsScreen() {
                                 <Text className="text-green-600 font-bold">
                                     Open
                                 </Text>
-                                <Text className="text-gray-500">{restaurantDetails.opens}: 00 </Text>
+                                <Text className="text-gray-500">{restaurantDetails?.timings?.open} </Text>
                             </View>
                             <View className="flex-row items-center space-x-2 gap-2">
                                 <Text className="text-red-600 font-bold">
                                     Close
                                 </Text>
-                                <Text className="text-gray-500">{restaurantDetails.closes}: 00 </Text>
+                                <Text className="text-gray-500">{restaurantDetails?.timings?.close} </Text>
                             </View>
                             <View className="flex-row space-x-4">
                                 {/* <MaterialIcons
@@ -139,6 +139,7 @@ export default function RestaurantDetailsScreen() {
                                 <Ionicons name="call-outline" size={24} color="#666" onPress={() => Linking.openURL(`tel:${restaurantDetails.contactNumber}`)} />
                             </View>
                         </View>
+                        <Text>500 for 2 adding GST</Text>
                     </View>
                     <View className="absolute top-4 right-4 bg-green-100 px-2 py-1 rounded-md">
                         <Text className="text-green-500 font-bold text-sm">

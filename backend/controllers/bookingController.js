@@ -135,7 +135,7 @@ exports.updateBooking = async (req, res) => {
     }
 
     res.status(200).json({
-      message: "Booking updated successfully",
+      message: "Modified successfully",
       booking: updatedBooking,
     });
   } catch (error) {
@@ -160,5 +160,45 @@ exports.deleteBooking = async (req, res) => {
     res
       .status(500)
       .json({ message: "Failed to delete booking", error: error.message });
+  }
+};
+
+exports.getBookingsByRestaurantId = async (req, res) => {
+  try {
+    const { restaurantId } = req.params;
+
+    // Validate restaurantId
+    if (!mongoose.Types.ObjectId.isValid(restaurantId)) {
+      return res.status(400).json({ message: "Invalid restaurant ID" });
+    }
+
+    // Get bookings with pagination
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+
+    const bookings = await Booking.find({ restaurantId })
+      .sort({ bookingDate: 1, bookingTime: 1 }) // Sort by date and time
+      .skip(skip)
+      .limit(limit)
+      .populate("userId", "name email") // Populate user details
+      .populate("restaurantId", "name location"); // Populate restaurant details
+
+    const totalBookings = await Booking.countDocuments({ restaurantId });
+
+    res.status(200).json({
+      success: true,
+      count: bookings.length,
+      total: totalBookings,
+      page,
+      pages: Math.ceil(totalBookings / limit),
+      data: bookings,
+    });
+  } catch (error) {
+    console.error("Error fetching bookings:", error);
+    res.status(500).json({ 
+      success: false,
+      message: "Server error while fetching bookings" 
+    });
   }
 };

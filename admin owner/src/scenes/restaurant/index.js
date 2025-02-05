@@ -41,6 +41,15 @@ const Restaurants = () => {
     fetchUsers();
   }, []);
 
+  const changrStatus = async (id) => {
+    try {
+      const response = await fetch(`${url}/api/restaurants/${id}`, {
+        method: "PUT",
+      });
+      // ....?
+    } catch (error) {}
+  };
+
   // Function to delete a restaurant
   const deleteRestaurant = async (id) => {
     try {
@@ -53,7 +62,9 @@ const Restaurants = () => {
       }
 
       // After successful deletion, update the UI by filtering out the deleted restaurant
-      setUserData((prevData) => prevData.filter((restaurant) => restaurant.id !== id));
+      setUserData((prevData) =>
+        prevData.filter((restaurant) => restaurant.id !== id)
+      );
       alert("Restaurant deleted successfully!");
     } catch (error) {
       console.error("Error deleting restaurant:", error);
@@ -62,7 +73,7 @@ const Restaurants = () => {
   };
 
   const columns = [
-    { field: "id", headerName: "ID", flex:1 },
+    { field: "id", headerName: "ID", flex: 1 },
     {
       field: "name",
       headerName: "Name",
@@ -96,10 +107,13 @@ const Restaurants = () => {
                 ? colors.greenAccent[600]
                 : colors.yellowAccent[600]
             }
+            onClick={() => changrStatus()}
             borderRadius="4px">
             {access === "Closed" && <BlockIcon />}
             {access === "Open" && <RestaurantIcon />}
-            <Typography color={colors.grey[100]} sx={{ ml: "5px" }}>
+            <Typography
+              color={colors.grey[100]}
+              sx={{ ml: "5px" }}>
               {access}
             </Typography>
           </Box>
@@ -131,7 +145,10 @@ const Restaurants = () => {
 
   return (
     <Box m="20px">
-      <Header title="RESTAURANTS" subtitle="Managing Restaurant" />
+      <Header
+        title="Bookings"
+        subtitle="Managing the Customer"
+      />
       <Box
         m="40px 0 0 0"
         height="75vh"
@@ -160,7 +177,10 @@ const Restaurants = () => {
             color: `${colors.greenAccent[200]} !important`,
           },
         }}>
-        <DataGrid rows={userData} columns={columns} />
+        <DataGrid
+          rows={userData}
+          columns={columns}
+        />
       </Box>
     </Box>
   );

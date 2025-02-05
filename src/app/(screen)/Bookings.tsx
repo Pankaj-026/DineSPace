@@ -128,19 +128,16 @@ const BookingScreen = () => {
 
         const data = await response.json();
         if (response.ok) {
-          console.log("AAAAAAAAAAAAAAAAAAAA");
           Alert.alert('Booking Successful', data.message);
           await AsyncStorage.setItem("BookingDetails", resId);
           router.push("/(main)/(tabs)/order")
         } else {
-          console.log("BBBBBBBBBBBB", data.message);
           console.log(data);
           console.log(response);
           
           Alert.alert('Error', data.message || 'Failed to create booking');
         }
       } else {
-        console.log("CCCCCCCCCCCCCCCCCCCcc");
         Alert.alert('Error', 'User not found. Please log in again.');
       }
     } catch (error) {

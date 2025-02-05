@@ -32,6 +32,7 @@ exports.addRestaurant = async (req, res) => {
     restaurantOwnerGmail,
     contactNumber,
     description,
+    tablePrice,
   } = req.body;
 
   try {
@@ -55,6 +56,7 @@ exports.addRestaurant = async (req, res) => {
       restaurantOwnerGmail,
       contactNumber,
       description,
+      tablePrice,
     });
 
     await newRestaurant.save();
@@ -91,5 +93,24 @@ exports.deleteRestaurant = async (req, res) => {
     res
       .status(500)
       .json({ message: "Failed to delete booking", error: error.message });
+  }
+};
+
+exports.updateRestaurantStatus = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updateRestaurant = await Restaurant.findByIdAndUpdate(id);
+
+    if (!updateRestaurant) {
+      return res.status(404).json({ message: "Restuarnat not found" });
+    }
+
+    res
+      .status(200)
+      .json({
+        message: "Restaurnat deleted successfully",
+      });
+  } catch (err) {
+    console.error("Error on updating", err);
   }
 };

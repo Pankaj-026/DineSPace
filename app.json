@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "sp-app",
-    "slug": "sp-app",
+    "name": "DineSPace",
+    "slug": "DineSPace",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./src/assets/images1/icon.png",

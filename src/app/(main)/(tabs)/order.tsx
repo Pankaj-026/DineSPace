@@ -101,17 +101,21 @@ const YourActivityScreen = () => {
 
   // Handle Modify Booking (Open Modal)
   const handleModifyBooking = (booking) => {
-    setSelectedBooking(booking);
+    setSelectedBooking({
+      ...booking,
+      bookingDate: new Date(booking.bookingDate), // Convert to Date
+      bookingTime: booking.bookingTime,
+      phoneNumber: booking.phoneNumber
+    });
     setModalVisible(true);
   };
 
   const handleDateChange = (event, selectedDate) => {
     setShowDatePicker(false);
     if (selectedDate) {
-      setDate(selectedDate);
-      setSelectedBooking((prev) => ({
+      setSelectedBooking(prev => ({
         ...prev,
-        bookingDate: selectedDate.toISOString().split('T')[0],
+        bookingDate: selectedDate // Store as Date object
       }));
     }
   };
@@ -120,9 +124,14 @@ const YourActivityScreen = () => {
   // Submit Modified Booking
   const handleSubmitModification = async () => {
     try {
+      const payload = {
+        ...selectedBooking,
+        bookingDate: selectedBooking.bookingDate.toISOString() // Convert to ISO string
+      };
+
       const response = await axios.put(
         `${url}/api/bookings/book/${selectedBooking._id}`,
-        selectedBooking
+        payload
       );
       const updatedBooking = response.data.booking;
 
@@ -275,11 +284,12 @@ const YourActivityScreen = () => {
               </TouchableOpacity>
               {showDatePicker && (
                 <DateTimePicker
-                  value={selectedBooking?.bookingDate}
+                  value={selectedBooking?.bookingDate || new Date()} // Fallback to current date
                   mode="date"
                   display="default"
                   minimumDate={new Date()}
-                  onChange={() => handleDateChange}
+                  onChange={handleDateChange} // Remove arrow function wrapper
+                  accentColor='#F49B33'
                 />
               )}
 

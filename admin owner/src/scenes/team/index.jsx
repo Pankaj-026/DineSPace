@@ -2,13 +2,14 @@ import React, { useState, useEffect } from "react";
 import { Box, Typography, useTheme } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { tokens } from "../../theme";
+// import axios from "axios";
+import AdminPanelSettingsOutlinedIcon from "@mui/icons-material/AdminPanelSettingsOutlined";
+import LockOpenOutlinedIcon from "@mui/icons-material/LockOpenOutlined";
+import SecurityOutlinedIcon from "@mui/icons-material/SecurityOutlined";
 import Header from "../../components/Header";
 import url from "../../constant/url";
-import BlockIcon from "@mui/icons-material/Close";
-import RestaurantIcon from "@mui/icons-material/Restaurant";
-import DeleteIcon from "@mui/icons-material/Delete";
 
-const Restaurants = () => {
+const Team = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
@@ -18,21 +19,29 @@ const Restaurants = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await fetch(`${url}/api/restaurants`); // Assuming backend runs on the same domain
+        const response = await fetch(`${url}/api/users`); // Assuming backend runs on the same domain
         if (!response.ok) {
           throw new Error("Failed to fetch user data");
         }
         const data = await response.json();
-        console.log(data);
-
+        // console.log(data);
+        
+        
         const transformedData = data.map((user) => ({
           id: user._id,
           name: user.name,
-          email: user.restaurantOwnerGmail,
-          verified: user.contactNumber,
-          access: user.status ? "Open" : "Closed",
+          email: user.email,
+          verified: user.verified,
+          access: user.isAdmin
+            ? "admin"
+            : user.isOwner
+            ? "owner"
+            : "user",
         }));
         setUserData(transformedData);
+        // console.log(await response.json());
+        // console.log(transformedData);
+        
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
@@ -41,28 +50,8 @@ const Restaurants = () => {
     fetchUsers();
   }, []);
 
-  // Function to delete a restaurant
-  const deleteRestaurant = async (id) => {
-    try {
-      const response = await fetch(`${url}/api/restaurants/${id}`, {
-        method: "DELETE",
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to delete restaurant");
-      }
-
-      // After successful deletion, update the UI by filtering out the deleted restaurant
-      setUserData((prevData) => prevData.filter((restaurant) => restaurant.id !== id));
-      alert("Restaurant deleted successfully!");
-    } catch (error) {
-      console.error("Error deleting restaurant:", error);
-      alert("Failed to delete restaurant.");
-    }
-  };
-
   const columns = [
-    { field: "id", headerName: "ID", flex:1 },
+    { field: "id", headerName: "ID" , flex: 1},
     {
       field: "name",
       headerName: "Name",
@@ -76,12 +65,12 @@ const Restaurants = () => {
     },
     {
       field: "verified",
-      headerName: "Contact",
+      headerName: "Verified",
       flex: 1,
     },
     {
       field: "access",
-      headerName: "Status",
+      headerName: "Role",
       flex: 1,
       renderCell: ({ row: { access } }) => {
         return (
@@ -92,37 +81,20 @@ const Restaurants = () => {
             display="flex"
             justifyContent="center"
             backgroundColor={
-              access === "Open"
-                ? colors.greenAccent[600]
-                : colors.yellowAccent[600]
+              access === "admin"
+                ? colors.redAccent[500]
+                : access === "owner"
+                ? colors.yellowAccent[600]
+                : colors.greenAccent[600]
             }
-            borderRadius="4px">
-            {access === "Closed" && <BlockIcon />}
-            {access === "Open" && <RestaurantIcon />}
+            borderRadius="4px"
+          >
+            {access === "admin" && <AdminPanelSettingsOutlinedIcon />}
+            {access === "owner" && <SecurityOutlinedIcon />}
+            {access === "user" && <LockOpenOutlinedIcon />}
             <Typography color={colors.grey[100]} sx={{ ml: "5px" }}>
               {access}
             </Typography>
-          </Box>
-        );
-      },
-    },
-    {
-      field: "delete",
-      headerName: "Delete",
-      flex: 1,
-      renderCell: ({ row }) => {
-        return (
-          <Box
-            width="60%"
-            m="0 auto"
-            p="5px"
-            display="flex"
-            justifyContent="center"
-            backgroundColor={colors.redAccent[600]}
-            borderRadius="4px"
-            onClick={() => deleteRestaurant(row.id)} // Trigger delete on click
-            sx={{ cursor: "pointer" }}>
-            <DeleteIcon />
           </Box>
         );
       },
@@ -131,7 +103,7 @@ const Restaurants = () => {
 
   return (
     <Box m="20px">
-      <Header title="RESTAURANTS" subtitle="Managing Restaurant" />
+      <Header title="RESTARANTS" subtitle="Managing the Restaurants" />
       <Box
         m="40px 0 0 0"
         height="75vh"
@@ -159,11 +131,12 @@ const Restaurants = () => {
           "& .MuiCheckbox-root": {
             color: `${colors.greenAccent[200]} !important`,
           },
-        }}>
+        }}
+      >
         <DataGrid rows={userData} columns={columns} />
       </Box>
     </Box>
   );
 };
 
-export default Restaurants;
+export default Team;

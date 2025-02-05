@@ -25,6 +25,7 @@ const restaurantSchema = new mongoose.Schema(
     contactNumber: { type: String },
     status: { type: Boolean, default: false },
     description: { type: String },
+    tablePrice: { type: Number, default: 500 },
   },
   {
     timestamps: true,
