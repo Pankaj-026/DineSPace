@@ -26,6 +26,11 @@ const restaurantSchema = new mongoose.Schema(
     status: { type: Boolean, default: false },
     description: { type: String },
     tablePrice: { type: Number, default: 500 },
+    ownerId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "users",
+      required: true,
+    },
   },
   {
     timestamps: true,

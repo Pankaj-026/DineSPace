@@ -26,63 +26,68 @@ const YourActivityScreen = () => {
   const [userData, setUserData] = useState<{ id: string }>({ id: "" });
   const [date, setDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
-
-  // Fetch bookings and restaurant details when the screen loads
-  useEffect(() => {
-    const fetchBookings = async () => {
-      try {
-        // Retrieve user data
-        const storedData = await AsyncStorage.getItem("userData");
-        if (storedData) {
-          setUserData(JSON.parse(storedData));
-        } else {
-          Alert.alert("Error", "User data not found. Please log in again.");
-          return;
-        }
-
-        // Fetch bookings
-        setLoading(true);
-        const bookingsResponse = await axios.get(
-          `${url}/api/bookings/book?userId=${userData.id}`
-        );
-        const fetchedBookings = bookingsResponse.data.bookings;
-
-        // Fetch restaurant details for each booking
-        const updatedBookings = await Promise.all(
-          fetchedBookings.map(async (booking) => {
-            try {
-              console.log("sddwsdd", booking.restaurantId?._id);
-
-              const restaurantResponse = await axios.get(
-                `${url}/api/restaurants/${booking.restaurantId?._id}`
-              );
-              return {
-                ...booking,
-                restaurantDetails: restaurantResponse.data, // Attach restaurant details
-              };
-            } catch (error) {
-              console.error(
-                `Failed to fetch restaurant for booking ${booking._id}:`,
-                error
-              );
-              return { ...booking, restaurantDetails: null };
-            }
-          })
-        );
-
-        setBookings(updatedBookings);
-        console.log(updatedBookings);
-
-      } catch (error) {
-        console.error("Failed to fetch bookings:", error);
-        Alert.alert("Error", "Failed to fetch bookings. Please try again.");
-      } finally {
-        setLoading(false);
+  
+ // Fetch bookings and restaurant details when the screen loads
+useEffect(() => {
+  const fetchBookings = async () => {
+    try {
+      // Retrieve user data
+      const storedData = await AsyncStorage.getItem("userData");
+      if (storedData) {
+        setUserData(JSON.parse(storedData));
+      } else {
+        Alert.alert("Error", "User data not found. Please log in again.");
+        return;
       }
-    };
 
-    fetchBookings();
-  }, []);
+      // Fetch bookings
+      setLoading(true);
+      const bookingsResponse = await axios.get(
+        `${url}/api/bookings/book/users/${userData.id}`
+      );
+      const fetchedBookings = bookingsResponse.data.bookings;
+
+      if (!fetchedBookings || fetchedBookings.length === 0) {
+        setBookings([]);
+        setLoading(false);
+        return;
+      }
+
+      // Fetch restaurant details for each booking
+      const updatedBookings = await Promise.all(
+        fetchedBookings.map(async (booking) => {
+          try {
+            const restaurantResponse = await axios.get(
+              `${url}/api/restaurants/${booking.restaurantId?._id}`
+            );
+            return {
+              ...booking,
+              restaurantDetails: restaurantResponse.data, // Attach restaurant details
+            };
+          } catch (error) {
+            console.error(
+              `Failed to fetch restaurant for booking ${booking._id}:`,
+              error.response ? error.response.data : error.message
+            );
+            return { ...booking, restaurantDetails: null };
+          }
+        })
+      );
+
+      setBookings(updatedBookings);
+      console.log(updatedBookings);
+
+    } catch (error) {
+      // console.error("Failed to fetch bookings:", error.response ? error.response.data : error.message);
+      // Alert.alert("Error", "Failed to fetch bookings. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchBookings();
+}, [userData.id]);
+  
 
   // Handle Cancel Booking
   const handleCancelBooking = async (bookingId) => {

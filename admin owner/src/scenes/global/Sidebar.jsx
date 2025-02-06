@@ -41,8 +41,10 @@ const Sidebar = () => {
 
   useEffect(() => {
     const fetchRestaurant = async () => {
+      const resId = localStorage.getItem("restaurantId")
+      console.log(resId)
       const response = await fetch(
-        `${url}/api/restaurants/679b8a7c08f53014d66a6533`
+        `${url}/api/restaurants/${JSON.parse(resId)}`
       );
       const json = await response.json();
       setRestaurant(json);

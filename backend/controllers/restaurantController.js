@@ -96,21 +96,22 @@ exports.deleteRestaurant = async (req, res) => {
   }
 };
 
-exports.updateRestaurantStatus = async (req, res) => {
+exports.updateRestaurant = async (req, res) => {
   try {
     const { id } = req.params;
-    const updateRestaurant = await Restaurant.findByIdAndUpdate(id);
+    const updates = req.body; // Assuming the updates are sent in the request body
+    const updateRestaurant = await Restaurant.findByIdAndUpdate(id, updates, { new: true });
 
     if (!updateRestaurant) {
-      return res.status(404).json({ message: "Restuarnat not found" });
+      return res.status(404).json({ message: "Restaurant not found" });
     }
 
-    res
-      .status(200)
-      .json({
-        message: "Restaurnat deleted successfully",
-      });
+    res.status(200).json({
+      message: "Restaurant updated successfully",
+      restaurant: updateRestaurant
+    });
   } catch (err) {
     console.error("Error on updating", err);
+    res.status(500).json({ message: "Internal server error" });
   }
 };

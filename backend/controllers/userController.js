@@ -1,4 +1,6 @@
 const User = require("../model/user");
+const Restaurant = require("../model/restaurant");
+const Booking = require("../model/bookings");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const Token = require("../model/token");
@@ -46,51 +48,52 @@ const signup = async (req, res) => {
   }
 };
 
-const login = async (req, res) => {
-  const { email, password, isAdmin, isOwner } = req.body;
-
-  console.log(req.body);
-  console.log(req.params);
-
+login = async (req, res) => {
   try {
-    // Check if the user exists
+    const { email, password } = req.body;
+
+    // 🔹 Find user by email
     const user = await User.findOne({ email });
+
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-    console.log(user);
-    
 
-    // Check if the user's email is verified
-    if (!user.verified) {
-      return res
-        .status(400)
-        .json({ message: "Please verify your email before logging in." });
-    }
-
-    // Check if the password matches
+    // 🔹 Check password
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(400).json({ message: "Invalid Password!" });
+      return res.status(400).json({ message: "Invalid credentials" });
     }
 
-    // Generate a JWT token
+    // 🔹 Generate JWT Token
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "1h",
+      expiresIn: "7d",
     });
-    res.status(200).json({
+
+    // 🔹 If user is an owner, fetch restaurant details
+    let restaurant = null;
+    let bookings = [];
+
+    if (user.isOwner && user.restaurantId) {
+      restaurant = await Restaurant.findById(user.restaurantId);
+      bookings = await Booking.find({ restaurantId: user.restaurantId });
+    }
+
+    res.json({
       token,
       user: {
         id: user._id,
         name: user.name,
         email: user.email,
-        admin: user.isAdmin,
-        owner: user.isOwner,
+        isOwner: user.isOwner,
+        isAdmin: user.isAdmin,
+        restaurant,
+        bookings, // All bookings for the restaurant
       },
     });
   } catch (error) {
-    console.error("Error during login:", error);
-    res.status(500).json({ message: "Server error", error });
+    console.error("Login Error:", error);
+    res.status(500).json({ message: "Server error" });
   }
 };
 

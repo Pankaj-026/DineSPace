@@ -7,6 +7,7 @@ import url from "../../constant/url";
 import BlockIcon from "@mui/icons-material/Close";
 import RestaurantIcon from "@mui/icons-material/Restaurant";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { Link } from "react-router-dom";
 
 const Restaurants = () => {
   const theme = useTheme();
@@ -53,21 +54,28 @@ const Restaurants = () => {
       }
 
       // After successful deletion, update the UI by filtering out the deleted restaurant
-      setUserData((prevData) => prevData.filter((restaurant) => restaurant.id !== id));
+      setUserData((prevData) =>
+        prevData.filter((restaurant) => restaurant.id !== id)
+      );
       alert("Restaurant deleted successfully!");
     } catch (error) {
       console.error("Error deleting restaurant:", error);
       alert("Failed to delete restaurant.");
     }
   };
-
+  
   const columns = [
-    { field: "id", headerName: "ID", flex:1 },
+    { field: "id", headerName: "ID", flex: 1 },
     {
       field: "name",
       headerName: "Name",
       flex: 1,
       cellClassName: "name-column--cell",
+      renderCell: ({ row }) => (
+        <Link to={`/RestaurantDetails/${row.id}`} style={{ textDecoration: "none", color: "white" }}>
+          {row.name}
+        </Link>
+      ),
     },
     {
       field: "email",
@@ -91,11 +99,7 @@ const Restaurants = () => {
             p="5px"
             display="flex"
             justifyContent="center"
-            backgroundColor={
-              access === "Open"
-                ? colors.greenAccent[600]
-                : colors.yellowAccent[600]
-            }
+            backgroundColor={access === "Open" ? colors.greenAccent[600] : colors.yellowAccent[600]}
             borderRadius="4px">
             {access === "Closed" && <BlockIcon />}
             {access === "Open" && <RestaurantIcon />}
@@ -120,7 +124,7 @@ const Restaurants = () => {
             justifyContent="center"
             backgroundColor={colors.redAccent[600]}
             borderRadius="4px"
-            onClick={() => deleteRestaurant(row.id)} // Trigger delete on click
+            onClick={() => deleteRestaurant(row.id)}
             sx={{ cursor: "pointer" }}>
             <DeleteIcon />
           </Box>
@@ -128,10 +132,14 @@ const Restaurants = () => {
       },
     },
   ];
+  
 
   return (
     <Box m="20px">
-      <Header title="RESTAURANTS" subtitle="Managing Restaurant" />
+      <Header
+        title="RESTAURANTS"
+        subtitle="Managing Restaurant"
+      />
       <Box
         m="40px 0 0 0"
         height="75vh"
@@ -160,7 +168,10 @@ const Restaurants = () => {
             color: `${colors.greenAccent[200]} !important`,
           },
         }}>
-        <DataGrid rows={userData} columns={columns} />
+          <DataGrid
+            rows={userData}
+            columns={columns}
+          />
       </Box>
     </Box>
   );

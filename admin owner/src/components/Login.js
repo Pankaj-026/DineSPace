@@ -1,5 +1,5 @@
 import React, { useState, useContext } from "react";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import {
   useTheme,
   Box,
@@ -23,7 +23,8 @@ const LoginForm = ({ onLogin }) => {
     email: "",
     password: "",
     isAdmin: false,
-    isOwner: false,
+    isOwner: true,
+    restaurant: "",
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -35,10 +36,10 @@ const LoginForm = ({ onLogin }) => {
 
     try {
       const response = await axios.post(`${url}/api/users/login`, formData);
-
+      console.log(response);
       localStorage.setItem("token", response.data.token);
-      localStorage.setItem("user", JSON.stringify(response.data.user));
-
+      localStorage.setItem("user", JSON.stringify(response.data?.user));
+      localStorage.setItem("restaurantId", JSON.stringify(response.data?.user?.restaurant?._id))
       onLogin();
     } catch (err) {
       setError(
@@ -65,6 +66,10 @@ const LoginForm = ({ onLogin }) => {
       color: colors.grey[100],
       fontSize: "0.9rem",
       fontWeight: 500,
+      transform: "translate(14px, 12px) scale(1)",
+      "&.MuiInputLabel-shrink": {
+        transform: "translate(14px, -9px) scale(0.75)",
+      },
       "&.Mui-focused": {
         color: colors.yellowAccent[500],
       },
@@ -94,12 +99,6 @@ const LoginForm = ({ onLogin }) => {
     },
     "& .MuiInputLabel-root.MuiFormLabel-filled": {
       transform: "translate(14px, -9px) scale(0.75)",
-    },
-    "& .MuiInputLabel-root": {
-      transform: "translate(14px, 12px) scale(1)",
-      "&.MuiInputLabel-shrink": {
-        transform: "translate(14px, -9px) scale(0.75)",
-      },
     },
   };
 

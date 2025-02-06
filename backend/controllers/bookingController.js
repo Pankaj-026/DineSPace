@@ -163,42 +163,43 @@ exports.deleteBooking = async (req, res) => {
   }
 };
 
-exports.getBookingsByRestaurantId = async (req, res) => {
+exports.getBookingByResId = async (req, res) => {
   try {
     const { restaurantId } = req.params;
+    const bookings = await Booking.find({ restaurantId });
 
-    // Validate restaurantId
-    if (!mongoose.Types.ObjectId.isValid(restaurantId)) {
-      return res.status(400).json({ message: "Invalid restaurant ID" });
+    if (!bookings || bookings.length === 0) {
+      return res.status(404).json({ message: "No bookings found for this restaurant" });
     }
 
-    // Get bookings with pagination
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 10;
-    const skip = (page - 1) * limit;
+    res.status(200).json({
+      message: "Bookings retrieved successfully",
+      bookings
+    });
+  } catch (err) {
+    console.error("Error retrieving bookings", err);
+    res.status(500).json({ message: "No Restaurant found" });
+  }
+};
 
-    const bookings = await Booking.find({ restaurantId })
-      .sort({ bookingDate: 1, bookingTime: 1 }) // Sort by date and time
-      .skip(skip)
-      .limit(limit)
-      .populate("userId", "name email") // Populate user details
-      .populate("restaurantId", "name location"); // Populate restaurant details
+exports.getBookingByUserId = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    console.log(`Fetching bookings for user: ${userId}`);
+    
+    const bookings = await Booking.find({ userId }).populate('restaurantId');
+    console.log(`Bookings found: ${bookings.length}`);
 
-    const totalBookings = await Booking.countDocuments({ restaurantId });
+    if (!bookings || bookings.length === 0) {
+      return res.status(200).json({ message: "No bookings found for this user" });
+    }
 
     res.status(200).json({
-      success: true,
-      count: bookings.length,
-      total: totalBookings,
-      page,
-      pages: Math.ceil(totalBookings / limit),
-      data: bookings,
+      message: "Bookings retrieved successfully",
+      bookings
     });
-  } catch (error) {
-    console.error("Error fetching bookings:", error);
-    res.status(500).json({ 
-      success: false,
-      message: "Server error while fetching bookings" 
-    });
+  } catch (err) {
+    console.error("Error retrieving bookings", err);
+    res.status(500).json({ message: "No user booking found" });
   }
 };
