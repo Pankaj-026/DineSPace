@@ -46,7 +46,7 @@ const Restaurants = () => {
       const response = await fetch(`${url}/api/restaurants/${id}`, {
         method: "PUT",
       });
-      // ....?
+      // ...?
     } catch (error) {}
   };
 

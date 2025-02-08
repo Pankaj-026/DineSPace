@@ -12,6 +12,7 @@ import Line from "./scenes/line";
 import FAQ from "./scenes/faq";
 import Calendar from "./scenes/calendar/calendar";
 import Geography from "./scenes/geography";
+import BookingsDetails from "./scenes/BookingsDetails";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { ColorModeContext, useMode } from "./theme";
 import LoginForm from "./components/Login";
@@ -67,6 +68,7 @@ function App() {
             <Route index element={<Dashboard />} />
             <Route path="team" element={<Team />} />
             <Route path="restaurant" element={<Restaurants />} />
+            <Route path="/BookingsDetails/:id" element={<BookingsDetails />} />
             <Route path="form" element={<Form />} />
             <Route path="bar" element={<Bar />} />
             <Route path="pie" element={<Pie />} />

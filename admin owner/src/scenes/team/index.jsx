@@ -2,12 +2,9 @@ import React, { useState, useEffect } from "react";
 import { Box, Typography, useTheme } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { tokens } from "../../theme";
-// import axios from "axios";
-import AdminPanelSettingsOutlinedIcon from "@mui/icons-material/AdminPanelSettingsOutlined";
-import LockOpenOutlinedIcon from "@mui/icons-material/LockOpenOutlined";
-import SecurityOutlinedIcon from "@mui/icons-material/SecurityOutlined";
 import Header from "../../components/Header";
 import url from "../../constant/url";
+import { Link } from "react-router-dom";
 
 const Team = () => {
   const theme = useTheme();
@@ -19,29 +16,31 @@ const Team = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await fetch(`${url}/api/users`); // Assuming backend runs on the same domain
+        const id = localStorage.getItem("restaurantId");
+        const cleanId = id.replace(/"/g, "");
+        console.log(`${url}/api/bookings/book/restaurant/${cleanId}`);
+        const response = await fetch(
+          `${url}/api/bookings/book/restaurant/${String(cleanId)}`
+        ); // Assuming backend runs on the same domain
         if (!response.ok) {
           throw new Error("Failed to fetch user data");
         }
         const data = await response.json();
-        // console.log(data);
-        
-        
-        const transformedData = data.map((user) => ({
-          id: user._id,
-          name: user.name,
-          email: user.email,
-          verified: user.verified,
-          access: user.isAdmin
-            ? "admin"
-            : user.isOwner
-            ? "owner"
-            : "user",
+        console.log(data);
+        console.log("dd");
+
+        const transformedData = data.bookings.map((bookings) => ({
+          id: bookings._id,
+          userName: bookings.userName,
+          phoneNumber: bookings.phoneNumber,
+          bookingDate: bookings.bookingDate,
+          bookingTime: bookings.bookingTime,
+          numberOfGuests: bookings.numberOfGuests,
+          details: "Details",
         }));
         setUserData(transformedData);
         // console.log(await response.json());
-        // console.log(transformedData);
-        
+        console.log(transformedData);
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
@@ -51,28 +50,38 @@ const Team = () => {
   }, []);
 
   const columns = [
-    { field: "id", headerName: "ID" , flex: 1},
+    { field: "id", headerName: "ID", flex: 1 },
     {
-      field: "name",
-      headerName: "Name",
+      field: "userName",
+      headerName: "UserName",
       flex: 1,
       cellClassName: "name-column--cell",
     },
     {
-      field: "email",
-      headerName: "Email",
+      field: "phoneNumber",
+      headerName: "Phone",
       flex: 1,
     },
     {
-      field: "verified",
-      headerName: "Verified",
+      field: "numberOfGuests",
+      headerName: "Party",
       flex: 1,
     },
     {
-      field: "access",
-      headerName: "Role",
+      field: "bookingDate",
+      headerName: "Date",
       flex: 1,
-      renderCell: ({ row: { access } }) => {
+    },
+    {
+      field: "bookingTime",
+      headerName: "Time",
+      flex: 1,
+    },
+    {
+      field: "Details",
+      headerName: "Details",
+      flex: 1,
+      renderCell: ({ id }) => {
         return (
           <Box
             width="60%"
@@ -80,20 +89,16 @@ const Team = () => {
             p="5px"
             display="flex"
             justifyContent="center"
-            backgroundColor={
-              access === "admin"
-                ? colors.redAccent[500]
-                : access === "owner"
-                ? colors.yellowAccent[600]
-                : colors.greenAccent[600]
-            }
-            borderRadius="4px"
-          >
-            {access === "admin" && <AdminPanelSettingsOutlinedIcon />}
-            {access === "owner" && <SecurityOutlinedIcon />}
-            {access === "user" && <LockOpenOutlinedIcon />}
-            <Typography color={colors.grey[100]} sx={{ ml: "5px" }}>
-              {access}
+            backgroundColor={colors.greenAccent[600]}
+            borderRadius="4px">
+            <Typography
+              color={colors.grey[100]}
+              sx={{ ml: "5px", cursor: "pointer" }}>
+              <Link
+                to={`/BookingsDetails/${id}`}
+                style={{ textDecoration: "none", color: "white" }}>
+                Details
+              </Link>
             </Typography>
           </Box>
         );
@@ -103,7 +108,10 @@ const Team = () => {
 
   return (
     <Box m="20px">
-      <Header title="RESTARANTS" subtitle="Managing the Restaurants" />
+      <Header
+        title="BOOKINGS"
+        subtitle="Managing the Bookings"
+      />
       <Box
         m="40px 0 0 0"
         height="75vh"
@@ -131,9 +139,11 @@ const Team = () => {
           "& .MuiCheckbox-root": {
             color: `${colors.greenAccent[200]} !important`,
           },
-        }}
-      >
-        <DataGrid rows={userData} columns={columns} />
+        }}>
+        <DataGrid
+          rows={userData}
+          columns={columns}
+        />
       </Box>
     </Box>
   );
