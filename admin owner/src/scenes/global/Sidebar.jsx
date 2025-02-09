@@ -7,13 +7,13 @@ import { tokens } from "../../theme";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import PeopleOutlinedIcon from "@mui/icons-material/PeopleOutlined";
 import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
-import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined";
 import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
-import BarChartOutlinedIcon from "@mui/icons-material/BarChartOutlined";
-import PieChartOutlineOutlinedIcon from "@mui/icons-material/PieChartOutlineOutlined";
-import TimelineOutlinedIcon from "@mui/icons-material/TimelineOutlined";
+// import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined";
+// import BarChartOutlinedIcon from "@mui/icons-material/BarChartOutlined";
+// import PieChartOutlineOutlinedIcon from "@mui/icons-material/PieChartOutlineOutlined";
+// import TimelineOutlinedIcon from "@mui/icons-material/TimelineOutlined";
+// import MapOutlinedIcon from "@mui/icons-material/MapOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
-import MapOutlinedIcon from "@mui/icons-material/MapOutlined";
 import RestaurantMenuIcon from "@mui/icons-material/RestaurantMenu";
 import url from "../../constant/url";
 
@@ -131,7 +131,7 @@ const Sidebar = () => {
               Data
             </Typography>
             <Item
-              title="Manage User"
+              title="Manage Bookings"
               to="/team"
               icon={<PeopleOutlinedIcon />}
             />
@@ -148,22 +148,22 @@ const Sidebar = () => {
               Pages
             </Typography>
             <Item
-              title="Profile Form"
+              title="Restuarant Editor"
               to="/form"
               icon={<PersonOutlinedIcon />}
             />
-            <Item
+            {/* <Item
               title="Calendar"
               to="/calendar"
               icon={<CalendarTodayOutlinedIcon />}
-            />
+            /> */}
             <Item
               title="FAQ Page"
               to="/faq"
               icon={<HelpOutlineOutlinedIcon />}
             />
 
-            <Typography
+            {/* <Typography
               variant="h6"
               color={colors.grey[300]}
               sx={{ m: "15px 0 5px 20px" }}>
@@ -188,7 +188,7 @@ const Sidebar = () => {
               title="Geography Chart"
               to="/geography"
               icon={<MapOutlinedIcon />}
-            />
+            /> */}
           </Box>
         </Menu>
       </ProSidebar>
