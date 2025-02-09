@@ -10,9 +10,8 @@ const {
 
 router.post("/", addRestaurant);
 router.get("/", getAllRestaurants);
-router.get("/:id", getRestaurantById); // Route to fetch a restaurant by ID
+router.get("/:id", getRestaurantById); 
 router.delete("/:id", deleteRestaurant);
-// to update the restaurant 
 router.put("/:id", updateRestaurant);
 
 

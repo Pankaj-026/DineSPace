@@ -1,387 +1,266 @@
-import React, { useState } from "react";
-import { Button, TextField, Box } from "@mui/material";
-import { useTheme } from "@mui/system";
+import React, { useState, useEffect } from "react";
+import {
+  Box,
+  Typography,
+  TextField,
+  Button,
+  useTheme,
+  Select,
+  Snackbar,
+  Alert,
+  MenuItem,
+} from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import { tokens } from "../../theme";
 import url from "../../constant/url";
-import Header from "../../components/Header";
 
-const AddRestaurantForm = () => {
+const RestaurantDetails = () => {
+  const [status, setStatus] = useState();
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const id = localStorage.getItem("restaurantId").replace(/"/g, "");
+
+  const navigate = useNavigate();
+  const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
+  const [restaurant, setRestaurant] = useState(null);
   const [formData, setFormData] = useState({
     name: "",
     address: "",
-    cuisine: "",
+    cuisine: [],
     timings: { open: "", close: "" },
-    opens: "",
-    closes: "",
-    popularDishes: "",
+    tablePrice: "",
+    popularDishes: [],
     rating: "",
     googleRating: "",
     discount: "",
     origin: "",
     imageUrl: "",
-    contactNumber: "",
-    restaurantOwnerGmail: "",
-    amenities: "",
-    description: "",
-    location: "",
     moreImages: [],
     menuImages: [],
-    tablePrice: "",
+    amenities: [],
+    location: "",
+    restaurantOwnerGmail: "",
+    contactNumber: "",
+    description: "",
+    status: true,
+    categories: {},
   });
 
-  const [localImage, setLocalImage] = useState(null);
-
-  const theme = useTheme();
-
-  const handleChange = (fieldPath, value) => {
-    const keys = fieldPath.split(".");
-    setFormData((prevState) => {
-      let updatedState = { ...prevState };
-      let nestedField = updatedState;
-
-      keys.forEach((key, index) => {
-        if (index === keys.length - 1) {
-          nestedField[key] = value;
-        } else {
-          nestedField = nestedField[key];
+  useEffect(() => {
+    const fetchRestaurantDetails = async () => {
+      try {
+        const response = await fetch(`${url}/api/restaurants/${id}`);
+        if (!response.ok) {
+          throw new Error("Failed to fetch restaurant details");
         }
-      });
-
-      return updatedState;
-    });
-  };
-
-  const pickImage = async (imageType) => {
-    const fileInput = document.createElement("input");
-    fileInput.type = "file";
-    fileInput.accept = "image/*";
-    fileInput.click();
-
-    fileInput.onchange = async (e) => {
-      const file = e.target.files[0];
-      const formData = new FormData();
-      formData.append("image", file);
-
-      const response = await fetch(`${url}/api/img/upload`, {
-        method: "POST",
-        body: formData,
-      });
-
-      const data = await response.json();
-      console.log(data);
-      const imageUrl = data.data.secure_url;
-
-      if (imageType === "main") {
-        handleChange("imageUrl", imageUrl);
-      } else if (imageType === "more") {
-        setFormData((prev) => ({
-          ...prev,
-          moreImages: [...prev.moreImages, imageUrl],
-        }));
-      } else {
-        setFormData((prev) => ({
-          ...prev,
-          menuImages: [...prev.menuImages, imageUrl],
-        }));
+        const data = await response.json();
+        setRestaurant(data);
+        setFormData(data);
+        setStatus(data.status);
+      } catch (error) {
+        console.error("Error fetching restaurant details:", error);
       }
     };
+
+    fetchRestaurantDetails();
+  }, [id]);
+
+  const handleChange = (field, value) => {
+    setFormData((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
+
+  const handleTimingsChange = (field, value) => {
+    setFormData((prev) => ({
+      ...prev,
+      timings: {
+        ...prev.timings,
+        [field]: value,
+      },
+    }));
+  };
+
+  const updateStatus = async () => {
+    try {
+      const response = await fetch(`${url}/api/restaurants/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ status }), // use the boolean directly
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to update status");
+      }
+
+      setOpenSnackbar(true);
+    } catch (error) {
+      console.error("Error updating status:", error);
+    }
   };
 
   const handleSubmit = async () => {
     try {
-      const processedData = {
-        ...formData,
-        opens: formData.opens ? parseInt(formData.opens) : null,
-        closes: formData.closes ? parseInt(formData.closes) : null,
-        rating: formData.rating ? parseFloat(formData.rating) : null,
-        googleRating: formData.googleRating
-          ? parseFloat(formData.googleRating)
-          : null,
-        discount: formData.discount ? parseFloat(formData.discount) : null,
-        cuisine: formData.cuisine.split(","),
-        popularDishes: formData.popularDishes.split(","),
-        amenities: formData.amenities.split(","),
-      };
-      // console.log(processedData);
-
-      const response = await fetch(`${url}/api/restaurants`, {
-        method: "POST",
+      const response = await fetch(`${url}/api/restaurants/${id}`, {
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(processedData),
+        body: JSON.stringify(formData),
       });
 
-      // console.log(await response);
-      // const result = await response.json();
-      // console.log(await result);
       if (response.ok) {
-        alert("Restaurant added successfully!");
-        setFormData({
-          name: "",
-          address: "",
-          cuisine: "",
-          timings: { open: "", close: "" },
-          popularDishes: "",
-          rating: "",
-          googleRating: "",
-          discount: "",
-          origin: "",
-          imageUrl: "",
-          contactNumber: "",
-          restaurantOwnerGmail: "",
-          amenities: "",
-          description: "",
-          location: "",
-          moreImages: [],
-          menuImages: [],
-          tablePrice: "",
-        });
-        setLocalImage(null);
+        alert("Restaurant updated successfully!");
+        navigate(-1);
       } else {
-        alert("Failed to add restaurant");
+        alert("Failed to update restaurant");
       }
     } catch (error) {
-      console.error("Error adding restaurant:", error);
+      console.error("Error updating restaurant:", error);
       alert("Submission Error");
     }
   };
 
-  const sxRepeat = {
-    "& .MuiInputLabel-root": {
-      color: theme.palette.neutral.main, // keeps label color consistent
-    },
-    "& .MuiOutlinedInput-root": {
-      "& fieldset": {
-        borderColor: theme.palette.neutral.main, // keeps the border visible when focused
-      },
-      "&:hover fieldset": {
-        borderColor: theme.palette.text.main, // change border color on hover
-      },
-      "&.Mui-focused fieldset": {
-        borderColor: theme.palette.neutral.main, // border color when focused
-      },
-      "&.Mui-focused": {
-        backgroundColor: theme.palette.background.default, // change background color on focus if needed
-      },
-    },
-  };
+  if (!restaurant) {
+    return <Typography>Loading...</Typography>;
+  }
+
+  const renderTextField = (label, field, type = "text", multiline = false) => (
+    <TextField
+      label={label}
+      value={formData[field]}
+      onChange={(e) =>
+        handleChange(
+          field,
+          type === "array" ? e.target.value.split(", ") : e.target.value
+        )
+      }
+      variant="outlined"
+      fullWidth
+      margin="normal"
+      multiline={multiline}
+    />
+  );
 
   return (
     <Box
       m="20px"
-      p="20px">
-      <Header
-        title="RESTARANTS"
-        subtitle="Adding the Restaurants"
-      />
-      <Box
-        display="flex"
-        flexDirection="column"
-        gap={2}
-        marginTop={2}>
-        
-        <TextField
-          label="Name"
-          value={formData.name}
-          onChange={(e) => handleChange("name", e.target.value)}
-          variant="outlined"
-          fullWidth
-          sx={sxRepeat}
-        />
-        <TextField
-          label="Address"
-          value={formData.address}
-          onChange={(e) => handleChange("address", e.target.value)}
-          variant="outlined"
-          fullWidth
-          sx={sxRepeat}
-        />
-        
-        <TextField
-          label="Cuisine (comma-separated)"
-          value={formData.cuisine}
-          onChange={(e) => handleChange("cuisine", e.target.value)}
-          variant="outlined"
-          fullWidth
-          sx={sxRepeat}
-        />
+      pb="20px">
+      <Typography
+        variant="h2"
+        style={{ fontWeight: 600 }}
+        color={colors.primary[100]}>
+        Restaurant Details
+      </Typography>
+      <Box mt="20px">
+        {renderTextField("Name", "name")}
+        {renderTextField("Address", "address")}
+        {renderTextField("Cuisine (comma-separated)", "cuisine", "array")}
         <TextField
           label="Open Time"
           value={formData.timings.open}
-          onChange={(e) => handleChange("timings.open", e.target.value)}
+          onChange={(e) => handleTimingsChange("open", e.target.value)}
           variant="outlined"
           fullWidth
-          sx={sxRepeat}
+          margin="normal"
         />
         <TextField
           label="Close Time"
           value={formData.timings.close}
-          onChange={(e) => handleChange("timings.close", e.target.value)}
+          onChange={(e) => handleTimingsChange("close", e.target.value)}
           variant="outlined"
           fullWidth
-          sx={sxRepeat}
+          margin="normal"
         />
-        <TextField
-          label="Opens (1-24)"
-          value={formData.opens}
-          onChange={(e) => handleChange("opens", e.target.value)}
-          type="number"
-          variant="outlined"
-          fullWidth
-          sx={sxRepeat}
-          inputProps={{ min: 1, max: 24 }}
-        />
-        <TextField
-          label="Closes (1-24)"
-          value={formData.closes}
-          onChange={(e) => handleChange("closes", e.target.value)}
-          type="number"
-          variant="outlined"
-          fullWidth
-          sx={sxRepeat}
-          inputProps={{ min: 1, max: 24 }}
-        />
-        <TextField
-          label="Popular Dishes (comma-separated)"
-          value={formData.popularDishes}
-          onChange={(e) => handleChange("popularDishes", e.target.value)}
-          variant="outlined"
-          fullWidth
-          sx={sxRepeat}
-        />
-        <TextField
-          label="Rating"
-          value={formData.rating}
-          onChange={(e) => handleChange("rating", e.target.value)}
-          variant="outlined"
-          fullWidth
-          sx={sxRepeat}
-        />
-        <TextField
-          label="Google Rating"
-          value={formData.googleRating}
-          onChange={(e) => handleChange("googleRating", e.target.value)}
-          variant="outlined"
-          fullWidth
-          sx={sxRepeat}
-        />
-        <TextField
-          label="Discount"
-          value={formData.discount}
-          onChange={(e) => handleChange("discount", e.target.value)}
-          variant="outlined"
-          fullWidth
-          sx={sxRepeat}
-        />
-        <TextField
-          label="Origin"
-          value={formData.origin}
-          onChange={(e) => handleChange("origin", e.target.value)}
-          variant="outlined"
-          fullWidth
-          sx={sxRepeat}
-        />
-        <TextField
-          label="Contact Number"
-          value={formData.contactNumber}
-          onChange={(e) => handleChange("contactNumber", e.target.value)}
-          variant="outlined"
-          fullWidth
-          sx={sxRepeat}
-        />
-        <TextField
-          label="Owner Gmail"
-          value={formData.restaurantOwnerGmail}
-          onChange={(e) => handleChange("restaurantOwnerGmail", e.target.value)}
-          variant="outlined"
-          fullWidth
-          sx={sxRepeat}
-        />
-        <TextField
-          label="Description"
-          value={formData.description}
-          onChange={(e) => handleChange("description", e.target.value)}
-          variant="outlined"
-          fullWidth
-          sx={sxRepeat}
-        />
-        <TextField
-          label="Amenities (comma-separated)"
-          value={formData.amenities}
-          onChange={(e) => handleChange("amenities", e.target.value)}
-          variant="outlined"
-          fullWidth
-          sx={sxRepeat}
-        />
-        <TextField
-          label="Location"
-          value={formData.location}
-          onChange={(e) => handleChange("location", e.target.value)}
-          variant="outlined"
-          fullWidth
-          sx={sxRepeat}
-        />
-        <TextField
-          label="Price"
-          value={formData.tablePrice}
-          onChange={(e) => handleChange("tablePrice", e.target.value)}
-          variant="outlined"
-          fullWidth
-          sx={sxRepeat}
-        />
-      </Box>
+        {renderTextField("Table Price", "tablePrice")}
+        {renderTextField(
+          "Popular Dishes (comma-separated)",
+          "popularDishes",
+          "array"
+        )}
+        {renderTextField("Rating", "rating")}
+        {renderTextField("Google Rating", "googleRating")}
+        {renderTextField("Discount", "discount")}
+        {renderTextField("Origin", "origin")}
+        {renderTextField("Contact Number", "contactNumber")}
+        {renderTextField("Owner Gmail", "restaurantOwnerGmail")}
+        {renderTextField("Description", "description", "text", true)}
+        {renderTextField("Amenities (comma-separated)", "amenities", "array")}
+        {renderTextField("Location", "location")}
+        {renderTextField("Image URL", "imageUrl")}
+        {renderTextField(
+          "More Images (comma-separated)",
+          "moreImages",
+          "array"
+        )}
+        {renderTextField(
+          "Menu Images (comma-separated)",
+          "menuImages",
+          "array"
+        )}
 
-      {/* Image Pickers */}
-      <Box
-        display="flex"
-        gap={2}
-        justifyContent="center"
-        marginTop={2}>
+        <Box mt={2}>
+          <Select
+            value={status}
+            onChange={(e) =>
+              setStatus(e.target.value === "true" || e.target.value === true)
+            }
+            sx={{ width: "100%", mt: 1 }}>
+            <MenuItem value={true}>Open</MenuItem>
+            <MenuItem value={false}>Close</MenuItem>
+          </Select>
+        </Box>
+
+        <Box
+          display="flex"
+          gap={2}
+          mt={3}>
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={updateStatus}>
+            Update Status
+          </Button>
+          <Button
+            variant="outlined"
+            color="secondary"
+            onClick={() => navigate(-1)}>
+            Back
+          </Button>
+        </Box>
+
+        <Snackbar
+          open={openSnackbar}
+          autoHideDuration={3000}
+          placeholder="Status"
+          onClose={() => setOpenSnackbar(false)}>
+          <Alert
+            onClose={() => setOpenSnackbar(false)}
+            severity="success">
+            Status updated successfully!
+          </Alert>
+        </Snackbar>
+
         <Button
           variant="contained"
           color="primary"
-          onClick={() => pickImage("main")}>
-          Pick Main Image
+          onClick={handleSubmit}
+          sx={{ mt: "20px" }}>
+          Update Restaurant
         </Button>
         <Button
           variant="contained"
           color="secondary"
-          onClick={() => pickImage("more")}>
-          Pick More Images
-        </Button>
-        <Button
-          variant="contained"
-          color="success"
-          onClick={() => pickImage("menu")}>
-          Pick Menu Images
-        </Button>
-      </Box>
-
-      {/* Image Preview */}
-      {localImage && (
-        <img
-          src={localImage}
-          alt="Selected"
-          width="100"
-          height="100"
-          style={{ marginTop: "16px", display: "block", margin: "0 auto" }}
-        />
-      )}
-
-      {/* Submit Button */}
-      <Box
-        display="flex"
-        justifyContent="center"
-        margin={4}>
-        <Button
-          variant="contained"
-          color="secondary"
-          onClick={handleSubmit}>
-          Add Restaurant
+          onClick={() => navigate(-1)}
+          sx={{ mt: "20px", ml: "10px" }}>
+          Back
         </Button>
       </Box>
     </Box>
   );
 };
 
-export default AddRestaurantForm;
+export default RestaurantDetails;

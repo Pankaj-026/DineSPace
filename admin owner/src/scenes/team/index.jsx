@@ -9,7 +9,6 @@ import { Link } from "react-router-dom";
 const Team = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-
   const [userData, setUserData] = useState([]);
 
   // Fetch user data from the backend
@@ -21,7 +20,7 @@ const Team = () => {
         console.log(`${url}/api/bookings/book/restaurant/${cleanId}`);
         const response = await fetch(
           `${url}/api/bookings/book/restaurant/${String(cleanId)}`
-        ); // Assuming backend runs on the same domain
+        );
         if (!response.ok) {
           throw new Error("Failed to fetch user data");
         }
