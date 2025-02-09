@@ -14,7 +14,7 @@ import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
 // import TimelineOutlinedIcon from "@mui/icons-material/TimelineOutlined";
 // import MapOutlinedIcon from "@mui/icons-material/MapOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
-import RestaurantMenuIcon from "@mui/icons-material/RestaurantMenu";
+// import RestaurantMenuIcon from "@mui/icons-material/RestaurantMenu";
 import url from "../../constant/url";
 
 const Item = ({ title, to, icon }) => {
@@ -41,8 +41,8 @@ const Sidebar = () => {
 
   useEffect(() => {
     const fetchRestaurant = async () => {
-      const resId = localStorage.getItem("restaurantId")
-      console.log(resId)
+      const resId = localStorage.getItem("restaurantId");
+      console.log(resId);
       const response = await fetch(
         `${url}/api/restaurants/${JSON.parse(resId)}`
       );
@@ -128,24 +128,25 @@ const Sidebar = () => {
               variant="h6"
               color={colors.grey[300]}
               sx={{ m: "15px 0 5px 20px" }}>
-              Data
+              Bookings
             </Typography>
             <Item
               title="Manage Bookings"
               to="/team"
               icon={<PeopleOutlinedIcon />}
             />
-            <Item
+            {/* <Item
               title="Bookings"
               to="/restaurant"
-              icon={<RestaurantMenuIcon />}
+              icon={<RestaurantMenuIcon />} 
             />
+              */}
 
             <Typography
               variant="h6"
               color={colors.grey[300]}
               sx={{ m: "15px 0 5px 20px" }}>
-              Pages
+              Restaurants
             </Typography>
             <Item
               title="Restuarant Editor"

@@ -14,7 +14,7 @@ const Team = () => {
 
   // Fetch user data from the backend
   useEffect(() => {
-    const fetchUsers = async () => {
+    const fetchBookings = async () => {
       try {
         const id = localStorage.getItem("restaurantId");
         const cleanId = id.replace(/"/g, "");
@@ -27,7 +27,6 @@ const Team = () => {
         }
         const data = await response.json();
         console.log(data);
-        console.log("dd");
 
         const transformedData = data.bookings.map((bookings) => ({
           id: bookings._id,
@@ -46,7 +45,7 @@ const Team = () => {
       }
     };
 
-    fetchUsers();
+    fetchBookings();
   }, []);
 
   const columns = [
