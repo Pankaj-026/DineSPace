@@ -1,31 +1,26 @@
 const express = require("express");
-const { signup, verifyEmail, login } = require("../controllers/userController");
+const {
+  signup,
+  verifyEmail,
+  login,
+  resSignup,
+  findUserById,
+  adminFind,
+  resLogin,
+} = require("../controllers/userController");
 const User = require("../model/user");
 const router = express.Router();
 
 router.post("/signup", signup);
 router.post("/login", login);
 router.get("/verify-email/:token", verifyEmail);
-router.get("/user/:id", async (req, res) => {
-  try {
-    const user = await User.findById(req.params.id);
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
-    res.status(200).json(user);
-  } catch (error) {
-    res.status(500).json({ message: "Error fetching user data", error });
-  }
-});
+router.get("/user/:id", findUserById );
 
 // Get all users
-router.get("/", async (req, res) => {
-  try {
-    const users = await User.find(); // Exclude sensitive fields like password
-    res.status(200).json(users);
-  } catch (error) {
-    res.status(500).json({ message: "Error fetching users", error });
-  }
-});
+router.get("/", adminFind);
+
+// Restaurant Signup Controller
+router.post("/restaurant/signup", resSignup);
+router.post("/restaurant/login", resLogin);
 
 module.exports = router;

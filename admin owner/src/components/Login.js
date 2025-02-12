@@ -35,11 +35,11 @@ const LoginForm = ({ onLogin }) => {
     setError("");
 
     try {
-      const response = await axios.post(`${url}/api/users/login`, formData);
+      const response = await axios.post(`${url}/api/users/restaurant/login`, formData);
       console.log(response);
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("user", JSON.stringify(response.data?.user));
-      localStorage.setItem("restaurantId", JSON.stringify(response.data?.user?.restaurant?._id))
+      localStorage.setItem("restaurantId", JSON.stringify(response.data?.user?.restaurantId))
       onLogin();
     } catch (err) {
       setError(

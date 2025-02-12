@@ -14,7 +14,7 @@ const FAQ = () => {
     <Box m="20px">
       <Header title="FAQ" subtitle="Frequently Asked Questions" />
 
-      <Accordion >
+      <Accordion defaultExpanded>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <Typography color={colors.greenAccent[500]} variant="h5">
             What is DineSPace?
@@ -29,7 +29,7 @@ const FAQ = () => {
         </AccordionDetails>
       </Accordion>
 
-      <Accordion >
+      <Accordion defaultExpanded>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <Typography color={colors.greenAccent[500]} variant="h5">
             How do I book a table?
@@ -44,7 +44,7 @@ const FAQ = () => {
         </AccordionDetails>
       </Accordion>
 
-      <Accordion >
+      <Accordion defaultExpanded>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <Typography color={colors.greenAccent[500]} variant="h5">
             Can I modify or cancel my reservation?
@@ -59,7 +59,7 @@ const FAQ = () => {
         </AccordionDetails>
       </Accordion>
 
-      <Accordion >
+      <Accordion defaultExpanded>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <Typography color={colors.greenAccent[500]} variant="h5">
             How can restaurants use DineSPace?
@@ -74,7 +74,7 @@ const FAQ = () => {
         </AccordionDetails>
       </Accordion>
 
-      <Accordion >
+      <Accordion defaultExpanded>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <Typography color={colors.greenAccent[500]} variant="h5">
             Is there a fee for using DineSPace?
