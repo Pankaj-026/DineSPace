@@ -89,6 +89,7 @@ const BookingDetails = () => {
             sx={{ width: "100%", mt: 1 }}
           >
             <MenuItem value="Pending">Pending</MenuItem>
+            <MenuItem value="Waiting">Waiting</MenuItem>
             <MenuItem value="Confirmed">Confirmed</MenuItem>
             <MenuItem value="Cancelled">Cancelled</MenuItem>
             <MenuItem value="Completed">Completed</MenuItem>

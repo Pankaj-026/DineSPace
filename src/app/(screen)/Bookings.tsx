@@ -16,7 +16,7 @@ const BookingScreen = () => {
   const [largeGroupSize, setLargeGroupSize] = useState('');
   const [date, setDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const [time, setTime] = useState('');
+  const [time, setTime] = useState(new Date());
   const [phoneNumber, setPhoneNumber] = useState('');
   const [specialRequests, setSpecialRequests] = useState('');
   const [timeSlots, setTimeSlots] = useState([]);
@@ -81,13 +81,13 @@ const BookingScreen = () => {
       Alert.alert('Error', 'Please fill out all required fields.');
       return;
     }
-    
+
     if (isLargeGroup && parseInt(largeGroupSize) <= 10) {
       console.log("lllllllllllff");
       Alert.alert('Error', 'Large group size must be more than 10.');
       return;
     }
-    
+
     if (!/^\d{10}$/.test(phoneNumber)) {
       console.log("lllllllllllffffrde");
       Alert.alert('Error', 'Please enter a valid 10-digit phone number.');
@@ -103,7 +103,7 @@ const BookingScreen = () => {
       console.log(user.id);
       console.log(user.name);
       if (user) {
-        
+
         const bookingDetails = {
           userId: user.id,
           userName: user.name,
@@ -134,7 +134,7 @@ const BookingScreen = () => {
         } else {
           console.log(data);
           console.log(response);
-          
+
           Alert.alert('Error', data.message || 'Failed to create booking');
         }
       } else {
@@ -202,41 +202,48 @@ const BookingScreen = () => {
           </View>
 
           {/* Date Picker */}
-          <View className="mb-4">
-            <Text className="text-lg font-semibold mb-2">Select Date</Text>
-            <TouchableOpacity
-              className="border border-gray-300 rounded-lg p-3 bg-white"
-              onPress={() => setShowDatePicker(true)}
-            >
-              <Text>{date.toDateString()}</Text>
-            </TouchableOpacity>
-            {showDatePicker && (
-              <DateTimePicker
-                value={date}
-                mode="date"
-                display="default"
-                minimumDate={new Date()}
-                onChange={handleDateChange}
-                accentColor='#F49B33'
-              />
-            )}
-          </View>
+          {selectedOption === "Pre-Book" ? (
+            <View className="mb-4">
+              <Text className="text-lg font-semibold mb-2">Select Date</Text>
+              <TouchableOpacity
+                className="border border-gray-300 rounded-lg p-3 bg-white"
+                onPress={() => setShowDatePicker(true)}
+              >
+                <Text>{date.toDateString()}</Text>
+              </TouchableOpacity>
+              {showDatePicker && (
+                <DateTimePicker
+                  value={date}
+                  mode="date"
+                  display="default"
+                  minimumDate={new Date()}
+                  onChange={handleDateChange}
+                  accentColor="#F49B33"
+                />
+              )}
+            </View>
+          ) : null
+          }
+
 
           {/* Time Picker */}
-          <View className="mb-4">
-            <Text className="text-lg font-semibold mb-2">Select Time</Text>
-            <View className="flex-row flex-wrap">
-              {timeSlots.map((slot, index) => (
-                <TouchableOpacity
-                  key={index}
-                  className={`px-4 py-2 m-1 rounded-full ${time === slot ? 'bg-[#F49B33]' : 'bg-gray-300'}`}
-                  onPress={() => setTime(slot)}
-                >
-                  <Text className={`text-lg ${time === slot ? 'text-white' : 'text-black'}`}>{slot}</Text>
-                </TouchableOpacity>
-              ))}
+          {selectedOption === "Pre-Book" ? (
+            <View className="mb-4">
+              <Text className="text-lg font-semibold mb-2">Select Time</Text>
+              <View className="flex-row flex-wrap">
+                {timeSlots.map((slot, index) => (
+                  <TouchableOpacity
+                    key={index}
+                    className={`px-4 py-2 m-1 rounded-full ${time === slot ? 'bg-[#F49B33]' : 'bg-gray-300'}`}
+                    onPress={() => setTime(slot)}
+                  >
+                    <Text className={`text-lg ${time === slot ? 'text-white' : 'text-black'}`}>{slot}</Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
             </View>
-          </View>
+          ) : null
+          }
 
           {/* Phone Number */}
           <View className="mb-4">
@@ -266,11 +273,11 @@ const BookingScreen = () => {
         </View>
 
         {/* Proceed Button */}
-        <TouchableOpacity className="bg-[#F49B33] p-4 rounded-lg" 
+        <TouchableOpacity className="bg-[#F49B33] p-4 rounded-lg"
           onPress={validateAndProceed}>
           <Text className="text-center text-lg text-white">Proceed</Text>
         </TouchableOpacity>
-      </ScrollView>
+      </ScrollView >
     </>
   );
 };
