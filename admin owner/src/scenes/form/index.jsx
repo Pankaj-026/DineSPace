@@ -8,18 +8,21 @@ import {
   Select,
   Snackbar,
   Alert,
+  FormControl,
+  InputLabel,
+  MenuItem,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { tokens } from "../../theme";
 import url from "../../constant/url";
-import { MenuItem } from "react-pro-sidebar";
 
 const RestaurantDetails = () => {
-  const [status, setStatus] = useState("");
+  const [status, setStatus] = useState(true);
   const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState("success");
   const id = localStorage.getItem("restaurantId").replace(/"/g, "");
 
-  console.log(id);
   const navigate = useNavigate();
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
@@ -57,6 +60,7 @@ const RestaurantDetails = () => {
         const data = await response.json();
         setRestaurant(data);
         setFormData(data);
+        setStatus(data.status);
       } catch (error) {
         console.error("Error fetching restaurant details:", error);
       }
@@ -79,16 +83,21 @@ const RestaurantDetails = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ Status: status }),
+        body: JSON.stringify({ status }),
       });
 
       if (!response.ok) {
         throw new Error("Failed to update status");
       }
 
+      setSnackbarMessage("Status updated successfully!");
+      setSnackbarSeverity("success");
       setOpenSnackbar(true);
     } catch (error) {
       console.error("Error updating status:", error);
+      setSnackbarMessage("Failed to update status");
+      setSnackbarSeverity("error");
+      setOpenSnackbar(true);
     }
   };
 
@@ -291,13 +300,17 @@ const RestaurantDetails = () => {
         />
 
         <Box mt={2}>
-          <Select
-            value={status}
-            onChange={(e) => setStatus(e.target.value)}
-            sx={{ width: "100%", mt: 1 }}>
-            <MenuItem value="true">Open</MenuItem>
-            <MenuItem value="false">Close</MenuItem>
-          </Select>
+          <FormControl fullWidth>
+            <InputLabel>Status</InputLabel>
+            <Select
+              value={status}
+              onChange={(e) => setStatus(e.target.value)}
+              label="Status"
+              sx={{ mt: 1 }}>
+              <MenuItem value={true}>Open</MenuItem>
+              <MenuItem value={false}>Close</MenuItem>
+            </Select>
+          </FormControl>
         </Box>
 
         <Box
@@ -324,8 +337,8 @@ const RestaurantDetails = () => {
           onClose={() => setOpenSnackbar(false)}>
           <Alert
             onClose={() => setOpenSnackbar(false)}
-            severity="success">
-            Status updated successfully!
+            severity={snackbarSeverity}>
+            {snackbarMessage}
           </Alert>
         </Snackbar>
 
