@@ -10,7 +10,7 @@ const RestaurantCard = ({ id, name, address, rating, discount, origin, imageUrl,
       onPress={async () => {
         try {
           await AsyncStorage.setItem("SingleRestaurantDetails", id);
-          if(status ===  true ){
+          if (status === true) {
             router.push(`/(screen)/RestuarantDetailsScreen`);
           }
         } catch (error) {
@@ -48,11 +48,11 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: 'white',
     borderRadius: 10,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 5,
+    // shadowColor: '#000',
+    // shadowOffset: { width: 0, height: 2 },
+    // shadowOpacity: 0.1,
+    // shadowRadius: 8,
+    // elevation: 5,
     marginBottom: 16,
     overflow: 'hidden',
   },

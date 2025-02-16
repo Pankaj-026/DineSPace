@@ -26,71 +26,66 @@ const YourActivityScreen = () => {
   const [userData, setUserData] = useState<{ id: string }>({ id: "" });
   const [date, setDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
-  
- // Fetch bookings and restaurant details when the screen loads
-useEffect(() => {
-  const fetchBookings = async () => {
-    try {
-      // Retrieve user data
-      const storedData = await AsyncStorage.getItem("userData");
-      if (storedData) {
-        setUserData(JSON.parse(storedData));
-      } else {
-        Alert.alert("Error", "User data not found. Please log in again.");
-        return;
-      }
 
-      // Fetch bookings
-      setLoading(true);
-      console.log('====================================');
-      console.log(userData.id);
-      console.log('====================================');
-      const bookingsResponse = await axios.get(
-        `${url}/api/bookings/book/users/${userData.id}`
-      );
-      const fetchedBookings = bookingsResponse.data.bookings;
+  // Fetch bookings and restaurant details when the screen loads
+  useEffect(() => {
+    const fetchBookings = async () => {
+      try {
+        // Retrieve user data
+        const storedData = await AsyncStorage.getItem("userData");
+        if (storedData) {
+          setUserData(JSON.parse(storedData));
+        } else {
+          Alert.alert("Error", "User data not found. Please log in again.");
+          return;
+        }
+        // Fetch bookings
+        setLoading(true);
+        const bookingsResponse = await axios.get(
+          `${url}/api/bookings/book/users/${userData.id}`
+        );
+        const fetchedBookings = bookingsResponse.data.bookings;
 
-      if (!fetchedBookings || fetchedBookings.length === 0) {
-        setBookings([]);
+
+        if (!fetchedBookings || fetchedBookings.length === 0) {
+          setBookings([]);
+          setLoading(false);
+          return;
+        }
+
+        // Fetch restaurant details for each booking
+        const updatedBookings = await Promise.all(
+          fetchedBookings.map(async (booking) => {
+            try {
+              const restaurantResponse = await axios.get(
+                `${url}/api/restaurants/${booking.restaurantId?._id}`
+              );
+              return {
+                ...booking,
+                restaurantDetails: restaurantResponse.data, // Attach restaurant details
+              };
+            } catch (error) {
+              console.error(
+                `Failed to fetch restaurant for booking ${booking._id}:`,
+                error.response ? error.response.data : error.message
+              );
+              return { ...booking, restaurantDetails: null };
+            }
+          })
+        );
+
+        setBookings(updatedBookings);
+      } catch (error) {
+        // console.error("Failed to fetch bookings:", error.response ? error.response.data : error.message);
+        // Alert.alert("Error", "Failed to fetch bookings. Please try again.");
+      } finally {
         setLoading(false);
-        return;
       }
+    };
 
-      // Fetch restaurant details for each booking
-      const updatedBookings = await Promise.all(
-        fetchedBookings.map(async (booking) => {
-          try {
-            const restaurantResponse = await axios.get(
-              `${url}/api/restaurants/${booking.restaurantId?._id}`
-            );
-            return {
-              ...booking,
-              restaurantDetails: restaurantResponse.data, // Attach restaurant details
-            };
-          } catch (error) {
-            console.error(
-              `Failed to fetch restaurant for booking ${booking._id}:`,
-              error.response ? error.response.data : error.message
-            );
-            return { ...booking, restaurantDetails: null };
-          }
-        })
-      );
+    fetchBookings();
+  }, [userData.id]);
 
-      setBookings(updatedBookings);
-      console.log(updatedBookings);
-
-    } catch (error) {
-      // console.error("Failed to fetch bookings:", error.response ? error.response.data : error.message);
-      // Alert.alert("Error", "Failed to fetch bookings. Please try again.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  fetchBookings();
-}, [userData.id]);
-  
 
   // Handle Cancel Booking
   const handleCancelBooking = async (bookingId) => {
@@ -203,76 +198,123 @@ useEffect(() => {
             </Text>
           </TouchableOpacity>
         </View>
-
         {/* Render Bookings */}
         {activeTab === "Bookings" ? (
-          bookings.length > 0 ? (
-            bookings.map((booking) => (
-              <View
-                key={booking._id}
-                className="bg-white m-4 rounded-lg shadow"
-              >
-                <Image
-                  source={{
-                    uri: booking.restaurantDetails?.imageUrl,
-                  }}
-                  className="w-full h-40 rounded-t-lg"
-                />
-                <View className="p-4">
-                  <Text className="text-lg font-bold">
-                    {booking.restaurantDetails?.name || "Unknown Restaurant"}
-                  </Text>
-                  <Text className="text-sm text-gray-500 mt-1">
-                    {booking.bookingDate} at {booking.bookingTime}
-                  </Text>
-                  <Text className="text-sm text-gray-500 mt-1">
-                    {booking.numberOfGuests} Guests {booking.bookingType}
-                  </Text>
-                  <Text className="text-sm text-gray-500 mt-2">
-                    Name: <Text className="font-bold">{booking.userName}</Text>
-                  </Text>
-                  <Text className="text-sm text-gray-500 mt-2">
-                    Phone Number: <Text className="font-bold">{booking.phoneNumber}</Text>
-                  </Text>
-                  <Text className="text-sm text-gray-500 mt-2">
-                    Booking ID: <Text className="font-bold">{booking._id}</Text>
-                  </Text>
-                  <Text className="text-sm text-gray-500 mt-2">
-                    Status: <Text className="font-bold">{booking.Status}</Text>
-                    <Text className="font-bold text-[#F49B33]">
-                      {booking.status}
+          bookings.filter(booking => booking.Status !== "Completed").length > 0 ? (
+            bookings
+              .filter(booking => booking.Status !== "Completed")
+              .map((booking) => (
+                <View key={booking._id} className="bg-white m-4 rounded-lg shadow">
+                  <Image
+                    source={{ uri: booking.restaurantDetails?.imageUrl }}
+                    className="w-full h-40 rounded-t-lg"
+                  />
+                  <View className="p-4">
+                    <Text className="text-lg font-bold">
+                      {booking.restaurantDetails?.name || "Unknown Restaurant"}
                     </Text>
-                  </Text>
-                  <View className="flex-row justify-between mt-4">
-                    <TouchableOpacity
-                      onPress={() => handleModifyBooking(booking)}
-                      className="bg-blue-500 px-4 py-2 rounded"
-                    >
-                      <Text className="text-white">Modify</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      onPress={() => handleCancelBooking(booking._id)}
-                      className="bg-red-500 px-4 py-2 rounded"
-                    >
-                      <Text className="text-white">Cancel</Text>
-                    </TouchableOpacity>
+                    <Text className="text-sm text-gray-500 mt-1">
+                      {booking.bookingDate} at {booking.bookingTime}
+                    </Text>
+                    <Text className="text-sm text-gray-500 mt-1">
+                      {booking.numberOfGuests} Guests {booking.bookingType}
+                    </Text>
+                    <Text className="text-sm text-gray-500 mt-2">
+                      Name: <Text className="font-bold">{booking.userName}</Text>
+                    </Text>
+                    <Text className="text-sm text-gray-500 mt-2">
+                      Phone Number: <Text className="font-bold">{booking.phoneNumber}</Text>
+                    </Text>
+                    <Text className="text-sm text-gray-500 mt-2">
+                      Booking ID: <Text className="font-bold">{booking._id}</Text>
+                    </Text>
+                    {
+                      booking.Status === "Pending" ? (
+                        <Text className="text-sm text-gray-500 mt-2">
+                          Status: <Text className="font-bold text-yellow-500">{booking.Status}</Text>
+                        </Text>
+                      ) : booking.Status === "Waiting" ? (
+                        <Text className="text-sm text-gray-500 mt-2">
+                          Status: <Text className="font-bold text-red-500">{booking.Status}</Text>
+                        </Text>
+                      ) : booking.Status === "Cancelled" ? (
+                        <Text className="text-sm text-gray-500 mt-2">
+                          Status: <Text className="font-bold text-red-500">{booking.Status}</Text>
+                        </Text>
+                      ) : (
+                        <Text className="text-sm text-gray-500 mt-2">
+                          Status: <Text className="font-bold text-green-500">{booking.Status}</Text>
+                        </Text>
+                      )
+                    }
+
+                    <View className="flex-row justify-between mt-4">
+                      <TouchableOpacity
+                        onPress={() => handleModifyBooking(booking)}
+                        className="bg-blue-500 px-4 py-2 rounded"
+                      >
+                        <Text className="text-white">Modify</Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        onPress={() => handleCancelBooking(booking._id)}
+                        className="bg-red-500 px-4 py-2 rounded"
+                      >
+                        <Text className="text-white">Cancel</Text>
+                      </TouchableOpacity>
+                    </View>
                   </View>
                 </View>
-              </View>
-            ))
+              ))
           ) : (
             <View className="bg-white m-4 rounded-lg shadow p-4">
               <Text className="text-lg font-bold">No bookings available</Text>
             </View>
           )
         ) : (
-          <View className="bg-white m-4 rounded-lg shadow p-4">
-            <Text className="text-lg font-bold">History</Text>
-            <Text className="text-sm text-gray-500 mt-2">
-              No previous history available
-            </Text>
-          </View>
-        )}
+          bookings.filter(booking => booking.Status === "Completed").length > 0 ? (
+            bookings
+              .filter(booking => booking.Status === "Completed")
+              .map((booking) => (
+                <View key={booking._id} className="bg-white m-4 rounded-lg shadow">
+                  <Image
+                    source={{ uri: booking.restaurantDetails?.imageUrl }}
+                    className="w-full h-40 rounded-t-lg"
+                  />
+                  <View className="p-4">
+                    <Text className="text-lg font-bold">
+                      {booking.restaurantDetails?.name || "Unknown Restaurant"}
+                    </Text>
+                    <Text className="text-sm text-gray-500 mt-1">
+                      {booking.bookingDate} at {booking.bookingTime}
+                    </Text>
+                    <Text className="text-sm text-gray-500 mt-1">
+                      {booking.numberOfGuests} Guests {booking.bookingType}
+                    </Text>
+                    <Text className="text-sm text-gray-500 mt-2">
+                      Name: <Text className="font-bold">{booking.userName}</Text>
+                    </Text>
+                    <Text className="text-sm text-gray-500 mt-2">
+                      Phone Number: <Text className="font-bold">{booking.phoneNumber}</Text>
+                    </Text>
+                    <Text className="text-sm text-gray-500 mt-2">
+                      Booking ID: <Text className="font-bold">{booking._id}</Text>
+                    </Text>
+                    <Text className="text-sm text-gray-500 mt-2">
+                      Status: <Text className="font-bold text-green-500">{booking.Status}</Text>
+                    </Text>
+                  </View>
+                </View>
+              ))
+          ) : (
+            <View className="bg-white m-4 rounded-lg shadow p-4">
+              <Text className="text-lg font-bold">History</Text>
+              <Text className="text-sm text-gray-500 mt-2">
+                No previous history available
+              </Text>
+            </View>
+          )
+        )
+        }
 
         {/* Modify Booking Modal */}
         <Modal visible={modalVisible} animationType="slide" transparent={true}>

@@ -1,12 +1,13 @@
 const express = require("express");
 const dotenv = require("dotenv");
 const connectDB = require("./config/db");
+const cors = require("cors");
+const morgan = require("morgan");
 const userRoutes = require("./routes/userRoutes");
 const restaurantRoutes = require("./routes/restaurantRoutes");
 const uploadRoutes = require("./routes/uploadRoutes");
 const bookingRoutes = require("./routes/bookingRoutes");
-const cors = require("cors");
-const morgan = require("morgan");
+const adminRoutes = require("./routes/adminRoutes");
 
 dotenv.config();
 connectDB();
@@ -15,15 +16,17 @@ const app = express();
 
 // Middleware
 app.use(express.json());
+app.use(morgan("dev"));
+
 // app.use(cors());
 app.use(cors({ origin: "*" }));
-app.use(morgan("dev"));
 
 // Routes
 app.use("/api/users", userRoutes);
 app.use("/api/restaurants", restaurantRoutes);
 app.use("/api/img", uploadRoutes);
 app.use("/api/bookings", bookingRoutes);
+app.use("/api/admin", adminRoutes);
 
 app.get("/", (req, res) => {
   res.send("Server is running successfully!");
