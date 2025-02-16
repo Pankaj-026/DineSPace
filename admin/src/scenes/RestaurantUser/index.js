@@ -1,19 +1,19 @@
 import React, { useState } from "react";
-import { Button, TextField, Box } from "@mui/material";
+import { Button, TextField, Box, FormControlLabel, Checkbox } from "@mui/material";
 import { useTheme } from "@mui/system";
 import url from "../../constant/url";
 import Header from "../../components/Header";
 
-const RestaurantsUser = () => {
+const RestaurantUser = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     password: "",
-    verified: true,
+    verified: false,
     isLogedin: false,
     isAdmin: false,
     isOwner: true,
-    restaurantId: "",
+    restaurantId: null,
   });
 
   const theme = useTheme();
@@ -43,7 +43,7 @@ const RestaurantsUser = () => {
           isLogedin: false,
           isAdmin: false,
           isOwner: true,
-          restaurantId: "",
+          restaurantId: null,
         });
       } else {
         alert("Failed to register user");
@@ -65,7 +65,7 @@ const RestaurantsUser = () => {
 
   return (
     <Box m="20px" p="20px">
-      <Header title="USER REGISTRATION" subtitle="Create a new restaurant account" />
+      <Header title="USER REGISTRATION" subtitle="Create a new restsuat account" />
       <Box display="flex" flexDirection="column" gap={2} marginTop={2}>
         <TextField
           label="Name"
@@ -93,13 +93,9 @@ const RestaurantsUser = () => {
           fullWidth
           sx={sxRepeat}
         />
-        <TextField
-          label="Restaurant Id"
-          value={formData.restaurantId}
-          onChange={(e) => handleChange("restaurantId", e.target.value)}
-          variant="outlined"
-          fullWidth
-          sx={sxRepeat}
+        <FormControlLabel
+          control={<Checkbox checked={formData.isOwner} onChange={(e) => handleChange("isOwner", e.target.checked)} />}
+          label="Register as Restaurant Owner"
         />
       </Box>
 
@@ -112,4 +108,4 @@ const RestaurantsUser = () => {
   );
 };
 
-export default RestaurantsUser;
+export default RestaurantUser;
