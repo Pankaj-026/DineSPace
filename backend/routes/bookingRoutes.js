@@ -10,5 +10,4 @@ router.delete('/book/:id', bookingController.deleteBooking);
 router.get('/book/restaurant/:restaurantId', bookingController.getBookingByResId);
 router.get('/book/users/:userId', bookingController.getBookingByUserId);
 
-
 module.exports = router;

@@ -15,15 +15,15 @@ const app = express();
 
 // Middleware
 app.use(express.json());
-app.use(cors());
+// app.use(cors());
+app.use(cors({ origin: "*" }));
 app.use(morgan("dev"));
 
 // Routes
 app.use("/api/users", userRoutes);
 app.use("/api/restaurants", restaurantRoutes);
-app.use("/api/img" , uploadRoutes);
-app.use("/api/bookings" , bookingRoutes);
-
+app.use("/api/img", uploadRoutes);
+app.use("/api/bookings", bookingRoutes);
 
 app.get("/", (req, res) => {
   res.send("Server is running successfully!");

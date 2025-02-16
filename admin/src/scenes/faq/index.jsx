@@ -12,70 +12,79 @@ const FAQ = () => {
   const colors = tokens(theme.palette.mode);
   return (
     <Box m="20px">
-      <Header title="FAQ" subtitle="Frequently Asked Questions Page" />
+      <Header title="FAQ" subtitle="Frequently Asked Questions" />
 
       <Accordion defaultExpanded>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <Typography color={colors.greenAccent[500]} variant="h5">
-            An Important Question
+            What is DineSPace?
           </Typography>
         </AccordionSummary>
         <AccordionDetails>
           <Typography>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-            malesuada lacus ex, sit amet blandit leo lobortis eget.
+            DineSPace is a restaurant and cafe seat reservation management app
+            that allows customers to book tables in advance and helps restaurant
+            owners manage their seating efficiently.
           </Typography>
         </AccordionDetails>
       </Accordion>
+
       <Accordion defaultExpanded>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <Typography color={colors.greenAccent[500]} variant="h5">
-            Another Important Question
+            How do I book a table?
           </Typography>
         </AccordionSummary>
         <AccordionDetails>
           <Typography>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-            malesuada lacus ex, sit amet blandit leo lobortis eget.
+            To book a table, simply sign up or log in to your DineSPace account,
+            browse available restaurants, select your preferred date and time,
+            and confirm your reservation.
           </Typography>
         </AccordionDetails>
       </Accordion>
+
       <Accordion defaultExpanded>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <Typography color={colors.greenAccent[500]} variant="h5">
-            Your Favorite Question
+            Can I modify or cancel my reservation?
           </Typography>
         </AccordionSummary>
         <AccordionDetails>
           <Typography>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-            malesuada lacus ex, sit amet blandit leo lobortis eget.
+            Yes, you can modify or cancel your reservation through the DineSPace
+            app. Go to "My Bookings," select the reservation, and choose to edit
+            or cancel it as per the restaurant's cancellation policy.
           </Typography>
         </AccordionDetails>
       </Accordion>
+
       <Accordion defaultExpanded>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <Typography color={colors.greenAccent[500]} variant="h5">
-            Some Random Question
+            How can restaurants use DineSPace?
           </Typography>
         </AccordionSummary>
         <AccordionDetails>
           <Typography>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-            malesuada lacus ex, sit amet blandit leo lobortis eget.
+            Restaurants can sign up as business owners, set up their seating
+            layout, manage bookings, and view customer insights to optimize
+            operations.
           </Typography>
         </AccordionDetails>
       </Accordion>
+
       <Accordion defaultExpanded>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <Typography color={colors.greenAccent[500]} variant="h5">
-            The Final Question
+            Is there a fee for using DineSPace?
           </Typography>
         </AccordionSummary>
         <AccordionDetails>
           <Typography>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-            malesuada lacus ex, sit amet blandit leo lobortis eget.
+            DineSPace is free for customers to use. Restaurants may have premium
+            features available for a subscription fee to enhance their booking
+            and management experience.
           </Typography>
         </AccordionDetails>
       </Accordion>

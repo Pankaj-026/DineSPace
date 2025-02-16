@@ -42,6 +42,9 @@ useEffect(() => {
 
       // Fetch bookings
       setLoading(true);
+      console.log('====================================');
+      console.log(userData.id);
+      console.log('====================================');
       const bookingsResponse = await axios.get(
         `${url}/api/bookings/book/users/${userData.id}`
       );
