@@ -33,7 +33,12 @@ const RestaurantUser = () => {
         body: JSON.stringify(formData),
       });
 
+      console.log("Response status:", response.status);
+      console.log("Response headers:", response.headers);
+
       if (response.ok) {
+        const data = await response.json();
+        console.log("Response data:", data);
         alert("User registered successfully!");
         setFormData({
           name: "",
@@ -46,7 +51,9 @@ const RestaurantUser = () => {
           restaurantId: null,
         });
       } else {
-        alert("Failed to register user");
+        const errorData = await response.json();
+        console.error("Failed to register user:", errorData);
+        alert(`Failed to register user: ${errorData.message}`);
       }
     } catch (error) {
       console.error("Error registering user:", error);
@@ -93,10 +100,18 @@ const RestaurantUser = () => {
           fullWidth
           sx={sxRepeat}
         />
-        <FormControlLabel
+        <TextField
+          label="Restaurant Id"
+          value={formData.restaurantId}
+          onChange={(e) => handleChange("restaurantId", e.target.value)}
+          variant="outlined"
+          fullWidth
+          sx={sxRepeat}
+        />
+        {/* <FormControlLabel
           control={<Checkbox checked={formData.isOwner} onChange={(e) => handleChange("isOwner", e.target.checked)} />}
           label="Register as Restaurant Owner"
-        />
+        /> */}
       </Box>
 
       <Box display="flex" justifyContent="center" margin={4}>

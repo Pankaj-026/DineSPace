@@ -202,7 +202,7 @@ const YourActivityScreen = () => {
         {activeTab === "Bookings" ? (
           bookings.filter(booking => booking.Status !== "Completed").length > 0 ? (
             bookings
-              .filter(booking => booking.Status !== "Completed")
+              .filter(booking => booking.Status !== "Completed" && booking.Status !== "Cancelled")
               .map((booking) => (
                 <View key={booking._id} className="bg-white m-4 rounded-lg shadow">
                   <Image
@@ -237,10 +237,7 @@ const YourActivityScreen = () => {
                         <Text className="text-sm text-gray-500 mt-2">
                           Status: <Text className="font-bold text-red-500">{booking.Status}</Text>
                         </Text>
-                      ) : booking.Status === "Cancelled" ? (
-                        <Text className="text-sm text-gray-500 mt-2">
-                          Status: <Text className="font-bold text-red-500">{booking.Status}</Text>
-                        </Text>
+                      
                       ) : (
                         <Text className="text-sm text-gray-500 mt-2">
                           Status: <Text className="font-bold text-green-500">{booking.Status}</Text>
@@ -271,9 +268,9 @@ const YourActivityScreen = () => {
             </View>
           )
         ) : (
-          bookings.filter(booking => booking.Status === "Completed").length > 0 ? (
+          bookings.filter(booking => booking.Status === "Completed" || booking.Status === "Cancelled").length > 0 ? (
             bookings
-              .filter(booking => booking.Status === "Completed")
+              .filter(booking => booking.Status === "Completed" || booking.Status === "Cancelled")
               .map((booking) => (
                 <View key={booking._id} className="bg-white m-4 rounded-lg shadow">
                   <Image
@@ -299,9 +296,17 @@ const YourActivityScreen = () => {
                     <Text className="text-sm text-gray-500 mt-2">
                       Booking ID: <Text className="font-bold">{booking._id}</Text>
                     </Text>
-                    <Text className="text-sm text-gray-500 mt-2">
-                      Status: <Text className="font-bold text-green-500">{booking.Status}</Text>
-                    </Text>
+                    {
+                      booking.Status === "Cancelled" ? (
+                        <Text className="text-sm text-gray-500 mt-2">
+                          Status: <Text className="font-bold text-red-500">{booking.Status}</Text>
+                        </Text>
+                      ) : (
+                        <Text className="text-sm text-gray-500 mt-2">
+                          Status: <Text className="font-bold text-green-500">{booking.Status}</Text>
+                        </Text>
+                      )
+                    }
                   </View>
                 </View>
               ))

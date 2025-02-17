@@ -12,7 +12,7 @@ import StatBox from "../../components/StatBox";
 import url from "../../constant/url";
 import GeographyChart from "../../components/GeographyChart";
 import ProgressCircle from "../../components/ProgressCircle";
-import BarChart from "../../components/BarChart";
+// import BarChart from "../../components/BarChart";
 
 const Dashboard = () => {
   const theme = useTheme();
@@ -237,7 +237,7 @@ const Dashboard = () => {
         </Box>
 
         {/* Sales Quantity */}
-        <Box
+        {/* <Box
           flex="1"
           backgroundColor={colors.primary[400]}
           p="30px"
@@ -252,7 +252,7 @@ const Dashboard = () => {
           <Box height="250px">
             <BarChart isDashboard={true} />
           </Box>
-        </Box>
+        </Box> */}
       </Box>
     </Box>
   );
