@@ -126,43 +126,85 @@ const verifyEmail = async (req, res) => {
 };
 
 const resSignup = async (req, res) => {
+  // try {
+  //   const { name, email, password, restaurantId } = req.body;
+
+  //   // Check if all required fields are present
+  //   if (!name || !email || !password || !restaurantId) {
+  //     return res.status(400).json({ message: "All fields are required" });
+  //   }
+
+  //   // Check if user already exists
+  //   const existingUser = await User.findOne({ email });
+  //   if (existingUser) {
+  //     return res.status(400).json({ message: "User already exists" });
+  //   }
+
+  //   // Create new user without hashing the password
+  //   const newUser = new User({
+  //     name,
+  //     email,
+  //     password, // Storing plain text password (not recommended)
+  //     restaurantId,
+  //     isOwner: true,
+  //     verified: true,
+  //   });
+
+  //   await newUser.save();
+
+  //   // Generate token
+  //   const token = jwt.sign(
+  //     {
+  //       id: newUser._id,
+  //       email: newUser.email,
+  //       restaurantId: newUser.restaurantId,
+  //       isOwner: newUser.isOwner,
+  //     },
+  //     process.env.JWT_SECRET,
+  //     { expiresIn: "1h" }
+  //   );
+
+  //   res.status(201).json({ message: "User registered successfully", token });
+  // } catch (error) {
+  //   console.error("Error during signup:", error);
+  //   res.status(500).json({ message: "Server error", error: error.message });
+  // }
+
+  const { name, email, password, restaurantId } = req.body;
+
   try {
-    const { name, email, password, restaurantId } = req.body;
-
-    // Check if all required fields are present
-    if (!name || !email || !password || !restaurantId) {
-      return res.status(400).json({ message: "All fields are required" });
-    }
-
-    // Check if user already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ message: "User already exists" });
     }
 
-    // Create new user without hashing the password
-    const newUser = new User({
+    const user = new User({
       name,
       email,
-      password, // Storing plain text password (not recommended)
+      password,
       restaurantId,
       isOwner: true,
       verified: true,
     });
+    await user.save();
 
-    await newUser.save();
+    console.log(req.body);
+    console.log(req.params);
 
-    // Generate token
-    const token = jwt.sign(
-      { id: newUser._id, email: newUser.email, restaurantId: newUser.restaurantId, isOwner: newUser.isOwner },
-      process.env.JWT_SECRET,
-      { expiresIn: "1h" }
-    );
+    // Generate a verification token
+    // const verificationToken = crypto.randomBytes(32).toString("hex");
+    // const token = new Token({
+    //   userId: user._id,
+    //   token: verificationToken,
+    // });
+    // await token.save();
 
-    res.status(201).json({ message: "User registered successfully", token });
+    res.status(201).json({
+      message: "Restaurant have registered successfully. ",
+    });
   } catch (error) {
     console.error("Error during signup:", error);
-    res.status(500).json({ message: "Server error", error: error.message });
+    res.status(500).json({ message: "Server error", error });
   }
 };
 
@@ -179,9 +221,9 @@ const resLogin = async (req, res) => {
       return res.status(404).json({ message: "Invalid email or password" });
     }
 
-    // Check password without decryption (plain text comparison)
-    if (password !== user.password) {
-      console.log(`Invalid password for user with email: ${email}`);
+    // 🔹 Check password
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
       return res.status(400).json({ message: "Invalid credentials" });
     }
 
@@ -194,7 +236,7 @@ const resLogin = async (req, res) => {
         isOwner: user.isOwner,
       },
       process.env.JWT_SECRET,
-      { expiresIn: "1h" }
+      { expiresIn: "7d" }
     );
 
     res.status(200).json({ message: "Login successful", token, user });
