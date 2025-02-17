@@ -19,19 +19,10 @@ app.use(express.json());
 app.use(morgan("dev"));
 
 // app.use(cors());
-const allowedOrigins = ["http://localhost:8081", "http://localhost:3001", "http://localhost:3000", "http://localhost:5106"];
-
 app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, origin);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
+  origin: ["http://localhost:8081", "http://localhost:3001","http://localhost:3000","http://localhost:5106" ], // Add the correct frontend origins
   credentials: true, // Allow cookies and authorization headers if needed
 }));
-
 
 // Routes
 app.use("/api/users", userRoutes);
