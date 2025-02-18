@@ -11,18 +11,18 @@ import 'expo-dev-client'
 const StartPage = () => {
   const router = useRouter(); // Initialize the router
   const fadeAnim = useRef(new Animated.Value(0)).current;
-  
+
   // Animate main content on mount
   useEffect(() => {
     Animated.timing(fadeAnim, {
       toValue: 1,
-      duration: 1000,
+      duration:1000,
       easing: Easing.ease,
       useNativeDriver: true,
     }).start();
   }, [fadeAnim]);
-  
-  
+
+
   //! For Web
   // const googleProvider = new GoogleAuthProvider();
   // const signInWithGoogle = () => {
@@ -59,10 +59,10 @@ const StartPage = () => {
             </Link>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.button}>
+          {/* <TouchableOpacity style={styles.button}>
             <AntDesign name="google" size={18} color="white" />
             <Text style={styles.button_text}>Sign up With Google</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
 
         {/* Horizontal Line with "OR" */}

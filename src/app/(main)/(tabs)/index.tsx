@@ -1,4 +1,4 @@
-import { View, Text, StatusBar, ActivityIndicator, TextInput, ScrollView, Keyboard, Image } from 'react-native';
+import { View, Text, StatusBar, ActivityIndicator, TextInput, ScrollView, Keyboard, Image, Button } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import HomeHeader from '@/src/components/HomeHeader';
@@ -7,12 +7,47 @@ import RestuarantImg from '@/src/constants/imagePath';
 import { FontAwesome, MaterialIcons } from '@expo/vector-icons';
 import axios from 'axios';  // Axios for API calls
 import url from "@/src/constants/axiosUrl";
+import * as Notifications from 'expo-notifications';
+import * as Device from 'expo-device';
+
+// Request permission for notifications
+async function registerForPushNotificationsAsync() {
+  if (Device.isDevice) {
+    const { status } = await Notifications.getPermissionsAsync();
+    if (status !== 'granted') {
+      const { status: newStatus } = await Notifications.requestPermissionsAsync();
+      if (newStatus !== 'granted') {
+        alert("Permission for notifications was denied.");
+        return;
+      }
+    }
+  } else {
+    alert("Must use a physical device for notifications.");
+  }
+}
+
+// Function to send a local notification
+async function sendNotification() {
+  await Notifications.scheduleNotificationAsync({
+    content: {
+      title: "Hello! 👋",
+      body: "Hi, this is a test notification!",
+      sound: true,
+    },
+    trigger: null, // Send immediately
+  });
+}
+
 
 const Home = () => {
   const [isPending, setIsPending] = useState(false);
   const [restaurants, setRestaurants] = useState([]);  // Dynamically loaded restaurant data
   const [searchText, setSearchText] = useState("");
   const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
+
+  useEffect(() => {
+    registerForPushNotificationsAsync();
+  }, []);
 
   // Fetch restaurant data from backend
   useEffect(() => {
@@ -87,6 +122,10 @@ const Home = () => {
               }}
             />
             <MaterialIcons name="keyboard-voice" size={23} color="#F49B33" />
+          </View>
+
+          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', height: 50 }}>
+            <Button title="Send Notification" onPress={sendNotification} />
           </View>
 
           <Image source={RestuarantImg.lightStrip} className='w-full h-28 object-cover' />

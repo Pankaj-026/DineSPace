@@ -267,6 +267,28 @@ const adminFind = async (req, res) => {
   }
 };
 
+const updateLoginStatus = async (req, res) => {
+  try {
+    const { userId, isLogedin } = req.body;
+
+    if (!userId)
+      return res.status(400).json({ message: "User ID is required" });
+
+    const user = await User.findByIdAndUpdate(
+      userId,
+      { isLogedin },
+      { new: true }
+    );
+
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    return res.status(200).json({ message: "Login status updated", user });
+  } catch (error) {
+    console.error("Error updating login status:", error);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
 module.exports = {
   signup,
   verifyEmail,
@@ -275,4 +297,5 @@ module.exports = {
   findUserById,
   adminFind,
   resLogin,
+  updateLoginStatus,
 };
