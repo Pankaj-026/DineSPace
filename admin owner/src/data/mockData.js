@@ -432,164 +432,70 @@ export const mockPieData = [
 
 export const mockLineData = [
   {
-    id: "japan",
+    id: "Pre-Booking",
     color: tokens("dark").greenAccent[500],
     data: [
       {
-        x: "plane",
+        x: "Sun",
         y: 101,
       },
       {
-        x: "helicopter",
+        x: "Mon",
         y: 75,
       },
       {
-        x: "boat",
+        x: "Tue",
         y: 36,
       },
       {
-        x: "train",
+        x: "Wed",
         y: 216,
       },
       {
-        x: "subway",
+        x: "Thu",
         y: 35,
       },
       {
-        x: "bus",
+        x: "Fri",
         y: 236,
       },
       {
-        x: "car",
+        x: "Sat",
         y: 88,
-      },
-      {
-        x: "moto",
-        y: 232,
-      },
-      {
-        x: "bicycle",
-        y: 281,
-      },
-      {
-        x: "horse",
-        y: 1,
-      },
-      {
-        x: "skateboard",
-        y: 35,
-      },
-      {
-        x: "others",
-        y: 14,
       },
     ],
   },
   {
-    id: "france",
+    id: "Walk-In Booking",
     color: tokens("dark").blueAccent[300],
     data: [
       {
-        x: "plane",
+        x: "Sun",
         y: 212,
       },
       {
-        x: "helicopter",
+        x: "Mon",
         y: 190,
       },
       {
-        x: "boat",
+        x: "Tue",
         y: 270,
       },
       {
-        x: "train",
+        x: "Wed",
         y: 9,
       },
       {
-        x: "subway",
+        x: "Thu",
         y: 75,
       },
       {
-        x: "bus",
+        x: "Fri",
         y: 175,
       },
       {
-        x: "car",
+        x: "Sat",
         y: 33,
-      },
-      {
-        x: "moto",
-        y: 189,
-      },
-      {
-        x: "bicycle",
-        y: 97,
-      },
-      {
-        x: "horse",
-        y: 87,
-      },
-      {
-        x: "skateboard",
-        y: 299,
-      },
-      {
-        x: "others",
-        y: 251,
-      },
-    ],
-  },
-  {
-    id: "us",
-    color: tokens("dark").redAccent[200],
-    data: [
-      {
-        x: "plane",
-        y: 191,
-      },
-      {
-        x: "helicopter",
-        y: 136,
-      },
-      {
-        x: "boat",
-        y: 91,
-      },
-      {
-        x: "train",
-        y: 190,
-      },
-      {
-        x: "subway",
-        y: 211,
-      },
-      {
-        x: "bus",
-        y: 152,
-      },
-      {
-        x: "car",
-        y: 189,
-      },
-      {
-        x: "moto",
-        y: 152,
-      },
-      {
-        x: "bicycle",
-        y: 8,
-      },
-      {
-        x: "horse",
-        y: 197,
-      },
-      {
-        x: "skateboard",
-        y: 107,
-      },
-      {
-        x: "others",
-        y: 170,
       },
     ],
   },
