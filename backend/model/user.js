@@ -16,6 +16,11 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    profilePic: {
+      type: String,
+      default:
+        "https://res.cloudinary.com/drwy0czge/image/upload/v1738336264/tmsff0ws2xaijmjm3owf.jpg",
+    },
     verified: {
       type: Boolean,
       default: false,
@@ -34,8 +39,8 @@ const userSchema = new mongoose.Schema(
     },
     restaurantId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Restaurant", 
-      default: null, 
+      ref: "Restaurant",
+      default: null,
     },
   },
   {

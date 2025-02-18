@@ -6,6 +6,7 @@ const jwt = require("jsonwebtoken");
 const Token = require("../model/token");
 const crypto = require("crypto");
 const sendEmail = require("../utils/sendEmails");
+const uploadToCloudinary = require("../utils/cloudinary");
 
 const signup = async (req, res) => {
   const { name, email, password } = req.body;
@@ -289,6 +290,46 @@ const adminFind = async (req, res) => {
 //   }
 // };
 
+// Update Name
+const updateName = async (req, res) => {
+  try {
+    const { name } = req.body;
+    if (!name) return res.status(400).json({ message: "Name is required" });
+
+    const user = await User.findByIdAndUpdate(
+      req.user.id,
+      { name },
+      { new: true }
+    );
+    res.json({ message: "Name updated successfully", user });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+const updateProfilePic = async (req, res) => {
+  try {
+      console.log("Request Body:", req.body); // Debugging
+      console.log("Request User:", req.user); // Debugging
+      
+      const userId = req.user?.id; // Make sure `req.user` exists
+      if (!userId) {
+          return res.status(400).json({ error: "User ID not found!" });
+      }
+
+      const imageUrl = req.file?.path; // Get the uploaded image URL
+      if (!imageUrl) {
+          return res.status(400).json({ error: "No file uploaded!" });
+      }
+
+      const updatedUser = await User.findByIdAndUpdate(userId, { profilePic: imageUrl }, { new: true });
+
+      res.json({ message: "Profile picture updated successfully", user: updatedUser });
+  } catch (error) {
+      res.status(500).json({ error: "Something went wrong!" });
+  }
+};
+
 module.exports = {
   signup,
   verifyEmail,
@@ -297,4 +338,6 @@ module.exports = {
   findUserById,
   adminFind,
   resLogin,
+  updateName,
+  updateProfilePic,
 };
