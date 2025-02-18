@@ -22,7 +22,7 @@
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./src/assets/images1/favicon.png"
+      "favicon": "./src/assets/images1/icon.png"
     },
     "plugins": [
       "@react-native-google-signin/google-signin",

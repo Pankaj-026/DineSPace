@@ -7,7 +7,6 @@ const {
   findUserById,
   adminFind,
   resLogin,
-  updateLoginStatus,
 } = require("../controllers/userController");
 const router = express.Router();
 
@@ -20,6 +19,6 @@ router.get("/", adminFind);
 // Restaurant Signup Controller
 router.post("/restaurant/signup", resSignup);
 router.post("/restaurant/login", resLogin);
-router.post("/update-login-status", updateLoginStatus);
+// router.post("/update-login-status", updateLoginStatus);
 
 module.exports = router;
