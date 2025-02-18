@@ -1,6 +1,5 @@
-// import { signOut } from 'firebase/auth';
 import { useRouter } from 'expo-router';
-// import { auth } from '@/firebase.config';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { TouchableOpacity, Text, StyleSheet, ActivityIndicator, View } from 'react-native';
 import React, { useState } from 'react';
 
@@ -15,6 +14,7 @@ const LogoutButton = () => {
 
         try {
             // await signOut(auth);
+            await AsyncStorage.removeItem("userData"); // Clear user data
             router.replace('/(auth)/login'); 
         } catch (error: any) {
             console.error('Error during logout:', error.message);

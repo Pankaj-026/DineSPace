@@ -1,7 +1,7 @@
-import { Box, Typography, useTheme } from "@mui/material";
+import { Box, Button, Typography, useTheme } from "@mui/material";
 import { useEffect, useState } from "react";
 import { tokens } from "../../theme";
-// import DownloadOutlinedIcon from "@mui/icons-material/DownloadOutlined";
+import DownloadOutlinedIcon from "@mui/icons-material/DownloadOutlined";
 import EmailIcon from "@mui/icons-material/Email";
 import RestaurantMenuIcon from "@mui/icons-material/RestaurantMenu";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
@@ -214,7 +214,7 @@ const Dashboard = () => {
               variant="h5"
               color={colors.greenAccent[500]}
               sx={{ mt: "15px" }}>
-              Rs. 48,352 revenue generated
+              $48,352 revenue generated
             </Typography>
             <Typography>Includes extra misc expenditures and costs</Typography>
           </Box>

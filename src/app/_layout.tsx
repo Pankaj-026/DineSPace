@@ -36,7 +36,7 @@ const RootLayout = () => {
                 const response = await axios.get(`${url}/api/users/user/${UserInfo.id}`);
                 let data = response.data;
 
-                if (data?.status) {
+                if (data?._id) {
                     setIsLogin(true);
                 } else {
                     setIsLogin(false);
