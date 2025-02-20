@@ -17,42 +17,72 @@ const Profile = () => {
   const [fadeAnim] = useState(new Animated.Value(0));
 
   useEffect(() => {
-    const fetchUserData = async () => {
+    fetchUserData(); // ✅ Always fetch fresh user data on screen load
+
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 1000,
+      useNativeDriver: true
+    }).start();
+  }, []);
+
+  const fetchUserData = async () => {
+    try {
       const storedData = await AsyncStorage.getItem("userData");
+      console.log(storedData);
+      
       if (storedData) {
         const parsedData = JSON.parse(storedData);
+        console.log(parsedData);
         setUserData(parsedData);
       }
-    };
-    fetchUserData();
-    Animated.timing(fadeAnim, { toValue: 1, duration: 1000, useNativeDriver: true }).start();
+    } catch (error) {
+      console.error("Failed to fetch user data:", error);
+    }
+  };
 
-  }, []);
 
   const handleProfilePicUpdate = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [1, 1],
-      quality: 1
+      quality: 1,
     });
 
+    console.log("aaaaaaaaaaaa", result);
+    
+
     if (!result.canceled) {
+      const localUri = result.assets[0].uri;
+      const filename = localUri.split('/').pop();
+
+      // Extract file type (e.g., image/jpg)
+      const match = /\.(\w+)$/.exec(filename ?? '');
+      const type = match ? `image/${match[1]}` : 'image';
+
+      // Prepare form data
       const formData = new FormData();
-      const response = await fetch(result.assets[0].uri);
-      const blob = await response.blob();
-      formData.append("profilePic", blob, "profile.jpg");
+      formData.append('profilePic', {
+        uri: localUri,
+        name: filename,
+        type: type,
+      } as any);
 
       try {
         const response = await axios.post(`${API_URL}/update-profile-pic`, formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
-            Authorization: `Bearer ${userData.token}`
-          }
+            Authorization: `Bearer ${userData.token}`,
+          },
         });
 
-        if (response.data.success) {
-          setUserData({ ...userData, profilePic: response.data.profilePic });
+        if (response.data.user) {
+          // ✅ Update state and AsyncStorage with the new profile picture
+          const updatedUserData = { ...userData, profilePic: response.data.user.profilePic };
+          setUserData(updatedUserData);
+          await AsyncStorage.setItem("userData", JSON.stringify(updatedUserData));
+
           Alert.alert("Success", "Profile picture updated successfully");
         }
       } catch (error) {
@@ -60,6 +90,10 @@ const Profile = () => {
       }
     }
   };
+
+  console.log("yooooooooooooooooooooooooooo",userData);
+  
+
 
   return (
     <ScrollView className="flex-1 bg-gray-100">
@@ -72,16 +106,16 @@ const Profile = () => {
             className='items-center relative'
           >
             <Image
-              source={{ uri: userData.profilePic || 'https://res.cloudinary.com/drwy0czge/image/upload/v1737036087/vz9pikjzarahf3sxppkj.png' }}
+              source={{ uri: userData.profilePic || 'https://res.cloudinary.com/drwy0czge/image/upload/v1738336264/tmsff0ws2xaijmjm3owf.jpg' }}
               className="w-28 h-28 rounded-full mb-4"
             />
-            <View className="absolute bottom-2 right-2 bg-white p-2 rounded-full">
+            <View className="absolute bottom-3 right-32 bg-white p-2 rounded-full">
               <Feather name="camera" size={20} color="#4B5563" />
             </View>
           </TouchableOpacity>
 
-          <View className="flex-row items-center gap-2">
-            <Text className="text-lg font-bold text-center">
+          <View className="flex-row justify-center items-center gap-2">
+            <Text className="text-lg items-center font-bold text-center">
               {userData.name}
             </Text>
             <TouchableOpacity onPress={() => router.push("/(screen)editProfile")}>
@@ -113,9 +147,9 @@ const Profile = () => {
             <Feather name="chevron-right" size={20} color="#9CA3AF" />
           </TouchableOpacity>
 
-          <TouchableOpacity className="flex-row items-center py-4 border-b border-gray-200">
+          <TouchableOpacity className="flex-row items-center py-4 border-b border-gray-200" onPress={() => router.push("/(tabs)/")}>
             <Feather name="credit-card" size={20} color="#4B5563" className="mr-4" />
-            <Text className="text-base font-bold text-black flex-1">Payment Methods</Text>
+            <Text className="text-base font-bold text-black flex-1">Restaurant</Text>
             <Feather name="chevron-right" size={20} color="#9CA3AF" />
           </TouchableOpacity>
 

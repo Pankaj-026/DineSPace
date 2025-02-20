@@ -9,7 +9,7 @@ export default function LoginMain() {
   const router = useRouter();
   const [formData, setFormData] = useState({
     id: "", email: "", password: "", isAdmin
-      : Boolean, isOwner: Boolean
+      : Boolean, isOwner: Boolean, profilrPic: "", token: ""
   });
   const [ErrorMessage, setErrorMessage] = useState("");
 
@@ -21,11 +21,12 @@ export default function LoginMain() {
     try {
       const response = await login(formData);
       Alert.alert("Success", "Login Successful!");
-      const { id, name, email, admin, owner } = response.data.user;
-      console.log(response.data)
+      console.log("AAAAAAAaaaaa", response.data)
+      const { id, name, email, admin, owner, profilePic } = response.data.user;
+      const token = response.data.token;
 
       // Store user data securely
-      await AsyncStorage.setItem("userData", JSON.stringify({ id, name, email, admin, owner }));
+      await AsyncStorage.setItem("userData", JSON.stringify({ token, id, name, email, admin, owner, profilePic }));
 
       router.push('/(main)/(tabs)');
 
