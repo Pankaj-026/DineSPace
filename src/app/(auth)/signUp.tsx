@@ -79,7 +79,7 @@ const SignUp = ({ navigation }: any) => {
 
 
           <Text style={styles.login_text}>
-            Already an user? <Link href={"/(auth)/login"} style={styles.red_colors} >LogIn</Link>
+            Already an user? <Link href={"/(auth)/login"} style={styles.red_colors} > LogIn</Link>
           </Text>
         </View>
 
@@ -142,6 +142,7 @@ const styles = StyleSheet.create({
   red_colors: {
     color: "#F49B33",
     fontWeight: 700,
+    cursor: "pointer",
   },
 });
 

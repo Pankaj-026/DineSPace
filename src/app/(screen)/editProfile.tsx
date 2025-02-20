@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
 import { Feather } from '@expo/vector-icons';
-import { router } from 'expo-router';
+import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import url from '@/src/constants/axiosUrl';
@@ -9,6 +9,8 @@ import url from '@/src/constants/axiosUrl';
 const API_URL = `${url}/api/users`;
 
 export default function EditProfile() {
+
+  const router = useRouter();
   const [name, setName] = useState('');
   const [userData, setUserData] = useState({ token: '' });
 
