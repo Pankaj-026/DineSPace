@@ -29,13 +29,6 @@ router.post("/restaurant/login", resLogin);
 // router.post("/update-login-status", updateLoginStatus);
 
 router.put("/update-name", authMiddleware, updateName);
-// router.post(
-//   "/update-profile-pic",
-//   authMiddleware,
-//   upload.single("file"),
-//   updateProfilePic
-// );
-
 router.post("/update-profile-pic", protect, upload.single("profilePic"), updateProfilePic);
 
 module.exports = router;
