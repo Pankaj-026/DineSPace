@@ -18,8 +18,6 @@ const userSchema = new mongoose.Schema(
     },
     profilePic: {
       type: String,
-      default:
-        "https://res.cloudinary.com/drwy0czge/image/upload/v1738336264/tmsff0ws2xaijmjm3owf.jpg",
     },
     verified: {
       type: Boolean,

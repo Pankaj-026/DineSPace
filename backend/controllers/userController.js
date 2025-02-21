@@ -88,7 +88,7 @@ login = async (req, res) => {
         email: user.email,
         isOwner: user.isOwner,
         isAdmin: user.isAdmin,
-        profilePic: "https://res.cloudinary.com/drwy0czge/image/upload/v1738336264/tmsff0ws2xaijmjm3owf.jpg",
+        profilePic: user.profilePic,
         restaurant,
         bookings, // All bookings for the restaurant
       },

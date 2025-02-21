@@ -21,7 +21,7 @@ const Profile = () => {
 
     Animated.timing(fadeAnim, {
       toValue: 1,
-      duration: 1000,
+      duration: 500,
       useNativeDriver: true
     }).start();
   }, []);
@@ -83,6 +83,10 @@ const Profile = () => {
           setUserData(updatedUserData);
           await AsyncStorage.setItem("userData", JSON.stringify(updatedUserData));
 
+          console.log('====================================');
+          console.log("updatedUserData", updatedUserData);
+          console.log('====================================');
+
           Alert.alert("Success", "Profile picture updated successfully");
         }
       } catch (error) {
@@ -91,7 +95,7 @@ const Profile = () => {
     }
   };
 
-  console.log("yooooooooooooooooooooooooooo",userData);
+  console.log("yooooooooooooooooooooooooooo",userData.profilePic);
   
 
 
@@ -106,10 +110,10 @@ const Profile = () => {
             className='items-center relative'
           >
             <Image
-              source={{ uri: userData.profilePic || 'https://res.cloudinary.com/drwy0czge/image/upload/v1738336264/tmsff0ws2xaijmjm3owf.jpg' }}
+              source={{ uri: userData.profilePic}}
               className="w-28 h-28 rounded-full mb-4"
             />
-            <View className="absolute bottom-3 right-32 bg-white p-2 rounded-full">
+            <View className="absolute bottom-3 right-0 bg-white p-2 rounded-full">
               <Feather name="camera" size={20} color="#4B5563" />
             </View>
           </TouchableOpacity>
@@ -118,7 +122,7 @@ const Profile = () => {
             <Text className="text-lg items-center font-bold text-center">
               {userData.name}
             </Text>
-            <TouchableOpacity onPress={() => router.push("/(screen)editProfile")}>
+            <TouchableOpacity onPress={() => router.push("/(screen)/editProfile")}>
               <Feather name="edit" size={18} color="#4B5563" />
             </TouchableOpacity>
           </View>
@@ -131,7 +135,7 @@ const Profile = () => {
         <View className="bg-white m-4 rounded-lg shadow p-4">
           <TouchableOpacity
             className="flex-row items-center py-4 border-b border-gray-200"
-            onPress={() => router.push("/(screen)editProfile")}
+            onPress={() => router.push("/(screen)/editProfile")}
           >
             <Feather name="user" size={20} color="#4B5563" className="mr-4" />
             <Text className="text-base font-bold text-black flex-1">Edit Profile</Text>

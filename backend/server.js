@@ -31,6 +31,8 @@ app.use("/api/img", uploadRoutes);
 app.use("/api/bookings", bookingRoutes);
 app.use("/api/admin", adminRoutes);
 
+app.use('/uploads', express.static('uploads'));
+
 app.get("/", (req, res) => {
   res.send("Server is running successfully!");
 });
