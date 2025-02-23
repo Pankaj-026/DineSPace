@@ -80,6 +80,10 @@ login = async (req, res) => {
       bookings = await Booking.find({ restaurantId: user.restaurantId });
     }
 
+
+    // console.log("Userrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr:", user.profilePic); // Correct 
+    
+
     res.json({
       token,
       user: {

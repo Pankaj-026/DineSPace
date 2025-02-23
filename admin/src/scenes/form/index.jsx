@@ -114,6 +114,7 @@ const AddRestaurantForm = () => {
       // console.log(await response);
       // const result = await response.json();
       // console.log(await result);
+      console.log(response);
       if (response.ok) {
         alert("Restaurant added successfully!");
         setFormData({

@@ -16,6 +16,6 @@ export default {
   aot_sushi: require("@/src/assets/Restuarant/aot_sushi.jpg"),
   onePiece: require("@/src/assets/Restuarant/onePiece.jpg"),
   bleachCafe: require("@/src/assets/Restuarant/soulSociety.jpg"),
-
+  dummy: require("@/backend/uploads/1740159280377-c2960c7a-ada0-473b-9899-68fa45182f18.jpeg"),
 
 };

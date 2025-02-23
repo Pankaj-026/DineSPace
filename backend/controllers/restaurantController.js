@@ -62,6 +62,7 @@ exports.addRestaurant = async (req, res) => {
     await newRestaurant.save();
     res.status(201).json(newRestaurant);
   } catch (error) {
+    console.log(error)
     res.status(500).json({ error: "Error adding restaurant" });
   }
 };

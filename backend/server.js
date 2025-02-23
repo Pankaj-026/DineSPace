@@ -8,6 +8,7 @@ const restaurantRoutes = require("./routes/restaurantRoutes");
 const uploadRoutes = require("./routes/uploadRoutes");
 const bookingRoutes = require("./routes/bookingRoutes");
 const adminRoutes = require("./routes/adminRoutes");
+const path = require("path");
 
 dotenv.config();
 connectDB();
@@ -31,7 +32,8 @@ app.use("/api/img", uploadRoutes);
 app.use("/api/bookings", bookingRoutes);
 app.use("/api/admin", adminRoutes);
 
-app.use('/uploads', express.static('uploads'));
+// Image uplaoded use for static work
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 app.get("/", (req, res) => {
   res.send("Server is running successfully!");

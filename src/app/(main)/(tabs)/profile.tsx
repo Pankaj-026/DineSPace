@@ -15,7 +15,12 @@ const API_URL = `${url}/api/users`;
 const Profile = () => {
   const [userData, setUserData] = useState({ id: '', name: '', email: '', profilePic: '', token: '' });
   const [fadeAnim] = useState(new Animated.Value(0));
+  const imagePath = { uri: `${url}/${userData.profilePic.replace(/\\/g,"/")}` };
 
+  // console.log('====================================');
+  // console.log("userDataaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa : ", imagePath);
+  // console.log('====================================');
+  
   useEffect(() => {
     fetchUserData(); // ✅ Always fetch fresh user data on screen load
 
@@ -25,11 +30,11 @@ const Profile = () => {
       useNativeDriver: true
     }).start();
   }, []);
-
+  
   const fetchUserData = async () => {
     try {
       const storedData = await AsyncStorage.getItem("userData");
-      console.log(storedData);
+      // console.log(storedData);
       
       if (storedData) {
         const parsedData = JSON.parse(storedData);
@@ -51,7 +56,7 @@ const Profile = () => {
     });
 
     console.log("aaaaaaaaaaaa", result);
-    
+
 
     if (!result.canceled) {
       const localUri = result.assets[0].uri;
@@ -83,9 +88,9 @@ const Profile = () => {
           setUserData(updatedUserData);
           await AsyncStorage.setItem("userData", JSON.stringify(updatedUserData));
 
-          console.log('====================================');
-          console.log("updatedUserData", updatedUserData);
-          console.log('====================================');
+          // console.log('====================================');
+          // console.log("updatedUserData", updatedUserData);
+          // console.log('====================================');
 
           Alert.alert("Success", "Profile picture updated successfully");
         }
@@ -95,9 +100,7 @@ const Profile = () => {
     }
   };
 
-  console.log("yooooooooooooooooooooooooooo",userData.profilePic);
-  
-
+  // console.log("yooooooooooooooooooooooooooo", userData.profilePic);
 
   return (
     <ScrollView className="flex-1 bg-gray-100">
@@ -110,7 +113,11 @@ const Profile = () => {
             className='items-center relative'
           >
             <Image
-              source={{ uri: userData.profilePic}}
+              // source={{ uri: userData.profilePic.replace(/\\/g,"/") }}
+              // source={`/backend/${userData.profilePic.replace(/\\/g,"/")}` }
+              // source={`/backend/uploads/1740205107195-4fbeab32-22fb-4d5d-9511-4590754ee88d.jpeg` }
+              // source={ images.dummy }
+              source={imagePath}
               className="w-28 h-28 rounded-full mb-4"
             />
             <View className="absolute bottom-3 right-0 bg-white p-2 rounded-full">
