@@ -132,50 +132,6 @@ const verifyEmail = async (req, res) => {
 };
 
 const resSignup = async (req, res) => {
-  // try {
-  //   const { name, email, password, restaurantId } = req.body;
-
-  //   // Check if all required fields are present
-  //   if (!name || !email || !password || !restaurantId) {
-  //     return res.status(400).json({ message: "All fields are required" });
-  //   }
-
-  //   // Check if user already exists
-  //   const existingUser = await User.findOne({ email });
-  //   if (existingUser) {
-  //     return res.status(400).json({ message: "User already exists" });
-  //   }
-
-  //   // Create new user without hashing the password
-  //   const newUser = new User({
-  //     name,
-  //     email,
-  //     password, // Storing plain text password (not recommended)
-  //     restaurantId,
-  //     isOwner: true,
-  //     verified: true,
-  //   });
-
-  //   await newUser.save();
-
-  //   // Generate token
-  //   const token = jwt.sign(
-  //     {
-  //       id: newUser._id,
-  //       email: newUser.email,
-  //       restaurantId: newUser.restaurantId,
-  //       isOwner: newUser.isOwner,
-  //     },
-  //     process.env.JWT_SECRET,
-  //     { expiresIn: "1h" }
-  //   );
-
-  //   res.status(201).json({ message: "User registered successfully", token });
-  // } catch (error) {
-  //   console.error("Error during signup:", error);
-  //   res.status(500).json({ message: "Server error", error: error.message });
-  // }
-
   const { name, email, password, restaurantId } = req.body;
 
   try {

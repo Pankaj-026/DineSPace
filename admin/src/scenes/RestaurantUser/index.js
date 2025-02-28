@@ -39,7 +39,7 @@ const RestaurantUser = () => {
       if (response.ok) {
         const data = await response.json();
         console.log("Response data:", data);
-        alert("User registered successfully!");
+        alert("Restaurant Manager registered successfully!");
         setFormData({
           name: "",
           email: "",
