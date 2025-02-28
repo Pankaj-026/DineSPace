@@ -2,11 +2,12 @@ import { View, Text, Image } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import NoUserProfile from "@/src/constants/imagePath";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import url from '../constants/axiosUrl';
 
 const HomeHeader = () => {
 
 
-  const [userData, setUserData] = useState<{ name: string; email: string }>({ name: "", email: "" });
+  const [userData, setUserData] = useState<{name: string; email: string, profilePic:string, }>({ name: "", email: "", profilePic: ""});
 
   // Fetch user data on component mount
   useEffect(() => {
@@ -26,7 +27,7 @@ const HomeHeader = () => {
                 <View className='pr-2'>
                     <View className='overflow-hidden'>
                         <Image
-                            source= {NoUserProfile.NoUserProfile}
+                            source= {{uri : `${url}/${userData.profilePic}`}}
                             style={{
                                 width: 50,
                                 height: 50,
@@ -41,7 +42,7 @@ const HomeHeader = () => {
                 <View>
                     <Text className='text-base text-neutral-100  font-medium size-22'>Welcome Back</Text>
                     
-                    <Text className='text-base size-18 whitespace-nowrap dark:text-white font-bold'>{userData.name}</Text>
+                    <Text className='text-base size-18 whitespace-nowrap dark:text-white font-bold'>{userData?.name}</Text>
                 </View>
             </View>
             

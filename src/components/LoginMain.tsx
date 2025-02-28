@@ -5,41 +5,57 @@ import { login } from "@/services/api";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function LoginMain() {
-
   const router = useRouter();
-  const [formData, setFormData] = useState({
-    id: "", email: "", password: "", isAdmin
-      : Boolean, isOwner: Boolean, profilrPic: "", token: ""
-  });
-  const [ErrorMessage, setErrorMessage] = useState("");
+  const [formData, setFormData] = useState({ email: "", password: "" });
+  const [errorMessage, setErrorMessage] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
-  const handleChange = (key: any, value: any) => {
-    setFormData({ ...formData, [key]: value });
+  const handleChange = (key: string, value: string) => {
+    setFormData(prev => ({ ...prev, [key]: value }));
+    setErrorMessage("");
+  };
+
+  const validateForm = () => {
+    if (!formData.email.trim()) {
+      setErrorMessage("Email is required");
+      return false;
+    }
+    if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      setErrorMessage("Please enter a valid email address");
+      return false;
+    }
+    if (!formData.password) {
+      setErrorMessage("Password is required");
+      return false;
+    }
+    return true;
   };
 
   const handleSubmit = async () => {
+    if (!validateForm()) return;
+
     try {
       const response = await login(formData);
       Alert.alert("Success", "Login Successful!");
-      console.log("AAAAAAAaaaaa", response.data)
+      
       const { id, name, email, admin, owner, profilePic } = response.data.user;
       const token = response.data.token;
 
-      // Store user data securely
-      await AsyncStorage.setItem("userData", JSON.stringify({ token, id, name, email, admin, owner, profilePic }));
+      await AsyncStorage.setItem("userData", 
+        JSON.stringify({ token, id, name, email, admin, owner, profilePic })
+      );
 
       router.push('/(main)/(tabs)');
-
     } catch (error: any) {
-      setErrorMessage(error.response?.data?.message || "An error occurred");
-      Alert.alert("Error", error.response?.data?.message || "An error occurred");
-      console.log("Error: ", error);
+      const message = error.response?.data?.message || "An error occurred";
+      setErrorMessage(message);
+      Alert.alert("Error", message);
     }
   };
 
   return (
     <View className="flex-1 justify-center px-6 py-16">
-      <Text className="text-lg font-bold text-center mb-5">Let's Get You Started</Text>
+      <Text className="text-lg font-bold text-center mb-5">Welcome Back!</Text>
 
       <Text className="text-sm font-medium mb-2">Email Address</Text>
       <TextInput
@@ -48,22 +64,36 @@ export default function LoginMain() {
         value={formData.email}
         onChangeText={(text) => handleChange("email", text)}
         keyboardType="email-address"
+        autoCapitalize="none"
       />
 
       <Text className="text-sm font-medium mb-2">Password</Text>
-      <TextInput
-        className="border border-gray-300 rounded-lg px-3 py-2 mb-4 text-base"
-        placeholder="Enter your password"
-        value={formData.password}
-        onChangeText={(text) => handleChange("password", text)}
-        secureTextEntry
-      />
+      <View className="border border-gray-300 rounded-lg mb-4 flex-row items-center">
+        <TextInput
+          className="flex-1 px-3 py-2 text-base"
+          placeholder="Enter your password"
+          value={formData.password}
+          onChangeText={(text) => handleChange("password", text)}
+          secureTextEntry={!showPassword}
+        />
+        <TouchableOpacity
+          className="px-3 py-2"
+          onPress={() => setShowPassword(!showPassword)}
+        >
+          <Text className="text-[#F49B33] font-medium">
+            {showPassword ? 'Hide' : 'Show'}
+          </Text>
+        </TouchableOpacity>
+      </View>
 
-      {ErrorMessage && (
-        <Text className="text-red-500 text-center mb-3">{ErrorMessage}</Text>
+      {errorMessage && (
+        <Text className="text-red-500 text-center mb-3">{errorMessage}</Text>
       )}
 
-      <TouchableOpacity className="bg-[#F49B33] rounded-lg py-3 mt-2" onPress={handleSubmit}>
+      <TouchableOpacity 
+        className="bg-[#F49B33] rounded-lg py-3 mt-2" 
+        onPress={handleSubmit}
+      >
         <Text className="text-white text-center font-semibold">Log In</Text>
       </TouchableOpacity>
 
