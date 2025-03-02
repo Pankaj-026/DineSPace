@@ -15,12 +15,8 @@ const API_URL = `${url}/api/users`;
 const Profile = () => {
   const [userData, setUserData] = useState({ id: '', name: '', email: '', profilePic: '', token: '' });
   const [fadeAnim] = useState(new Animated.Value(0));
-  const imagePath = { uri: `${url}/${userData.profilePic.replace(/\\/g,"/")}` };
+  const imagePath = { uri: `${url}/${userData.profilePic}` };
 
-  // console.log('====================================');
-  // console.log("userDataaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa : ", imagePath);
-  // console.log('====================================');
-  
   useEffect(() => {
     fetchUserData(); // ✅ Always fetch fresh user data on screen load
 
@@ -30,12 +26,12 @@ const Profile = () => {
       useNativeDriver: true
     }).start();
   }, []);
-  
+
   const fetchUserData = async () => {
     try {
       const storedData = await AsyncStorage.getItem("userData");
       // console.log(storedData);
-      
+
       if (storedData) {
         const parsedData = JSON.parse(storedData);
         console.log(parsedData);
@@ -112,14 +108,19 @@ const Profile = () => {
             onPress={handleProfilePicUpdate}
             className='items-center relative'
           >
-            <Image
-              // source={{ uri: userData.profilePic.replace(/\\/g,"/") }}
-              // source={`/backend/${userData.profilePic.replace(/\\/g,"/")}` }
-              // source={`/backend/uploads/1740205107195-4fbeab32-22fb-4d5d-9511-4590754ee88d.jpeg` }
-              // source={ images.dummy }
-              source={imagePath}
-              className="w-28 h-28 rounded-full mb-4"
-            />
+            {
+              userData.profilePic !== null ? (
+                <Image
+                  source={imagePath}
+                  className="w-28 h-28 rounded-full mb-4"
+                />
+              ) : (
+                <Image
+                  source={{ uri: "https://res.cloudinary.com/drwy0czge/image/upload/v1738336264/tmsff0ws2xaijmjm3owf.jpg" }}
+                  className="w-28 h-28 rounded-full mb-4"
+                />
+              )
+            }
             <View className="absolute bottom-3 right-0 bg-white p-2 rounded-full">
               <Feather name="camera" size={20} color="#4B5563" />
             </View>

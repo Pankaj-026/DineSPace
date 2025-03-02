@@ -13,8 +13,8 @@ const Auth = () => {
       setIsLoading(true)
       setTimeout(() => {
         router.push("/(auth)/startPage")
-      }, 2000)
-    }, 3000)
+      }, 3000)
+    }, 4000)
 
 
     StatusBar.setBarStyle('dark-content');
