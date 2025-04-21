@@ -30,7 +30,7 @@ const Profile = () => {
   const fetchUserData = async () => {
     try {
       const storedData = await AsyncStorage.getItem("userData");
-      // console.log(storedData);
+      console.log(storedData);
 
       if (storedData) {
         const parsedData = JSON.parse(storedData);
@@ -51,7 +51,7 @@ const Profile = () => {
       quality: 1,
     });
 
-    console.log("aaaaaaaaaaaa", result);
+    console.log("Image Picker Result:", result);
 
 
     if (!result.canceled) {
@@ -85,7 +85,7 @@ const Profile = () => {
           await AsyncStorage.setItem("userData", JSON.stringify(updatedUserData));
 
           // console.log('====================================');
-          // console.log("updatedUserData", updatedUserData);
+          console.log("updatedUserData", updatedUserData);
           // console.log('====================================');
 
           Alert.alert("Success", "Profile picture updated successfully");
@@ -96,7 +96,7 @@ const Profile = () => {
     }
   };
 
-  // console.log("yooooooooooooooooooooooooooo", userData.profilePic);
+  console.log("yooooooooooooooooooooooooooo", userData.profilePic);
 
   return (
     <ScrollView className="flex-1 bg-gray-100">

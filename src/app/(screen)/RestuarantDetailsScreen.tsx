@@ -122,14 +122,9 @@ export default function RestaurantDetailsScreen() {
                                 <Text className="text-green-600 font-bold">
                                     Open
                                 </Text>
-                                <Text className="text-gray-500">{restaurantDetails?.timings?.open} </Text>
+                                <Text className="text-gray-500">{restaurantDetails?.timings?.open} - {restaurantDetails?.timings?.close}</Text>
                             </View>
-                            <View className="flex-row items-center space-x-2 gap-2">
-                                <Text className="text-red-600 font-bold">
-                                    Close
-                                </Text>
-                                <Text className="text-gray-500">{restaurantDetails?.timings?.close} </Text>
-                            </View>
+
                             <View className="flex-row space-x-4">
                                 {/* <MaterialIcons
                                     name="navigate-next"

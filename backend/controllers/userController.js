@@ -32,7 +32,7 @@ const signup = async (req, res) => {
     await token.save();
 
     // Send the verification email
-    const verificationUrl = `${process.env.BASE_URL}/app/users/verify-email/${verificationToken}`;
+    const verificationUrl = `http://192.168.162.1:5106/app/users/verify-email/${verificationToken}`;
     await sendEmail(
       email,
       "Email Verification",

@@ -12,7 +12,7 @@ import StatBox from "../../components/StatBox";
 import url from "../../constant/url";
 import GeographyChart from "../../components/GeographyChart";
 import ProgressCircle from "../../components/ProgressCircle";
-// import BarChart from "../../components/BarChart";
+
 
 const Dashboard = () => {
   const theme = useTheme();
@@ -214,7 +214,7 @@ const Dashboard = () => {
               variant="h5"
               color={colors.greenAccent[500]}
               sx={{ mt: "15px" }}>
-              $48,352 revenue generated
+              Rs 106026 revenue generated
             </Typography>
             <Typography>Includes extra misc expenditures and costs</Typography>
           </Box>

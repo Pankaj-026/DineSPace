@@ -99,13 +99,12 @@ const Dashboard = () => {
         />
       </Box>
 
-      {/* GRID & CHARTS */}
+      {/* GRID 
       <Box
         display="grid"
         gridTemplateColumns="repeat(12, 1fr)"
         gridAutoRows="150px"
         gap="20px">
-        {/* STAT BOXES */}
         {[
           {
             title: stats.totalUsers,
@@ -150,6 +149,7 @@ const Dashboard = () => {
           </Box>
         ))}
       </Box>
+      */}
 
       {/* CHARTS */}
       <Box
